@@ -1,0 +1,2336 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Jungle Math Quest — Class 5 Maths Adventure</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐿️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   JUNGLE MATH QUEST — styles
+   Palette: leaf #3FA34D, sky #4FB0E8, mango #FF7A5C, sun #FFB238,
+            canopy navy #1F3A3D, paper #FFF8EC
+   ========================================================================== */
+
+:root {
+  --leaf: #3FA34D;
+  --sky: #4FB0E8;
+  --mango: #FF7A5C;
+  --sun: #FFB238;
+  --canopy: #1F3A3D;
+  --paper: #FFF8EC;
+  --paper-2: #FFFFFF;
+  --ink: #234034;
+  --ink-soft: #5B7268;
+  --danger: #E85D5D;
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 10px 24px rgba(31, 58, 61, 0.12);
+  --shadow-lg: 0 18px 40px rgba(31, 58, 61, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  min-height: 100%;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 8% 15%, rgba(63,163,77,0.10) 0, transparent 40%),
+    radial-gradient(circle at 92% 85%, rgba(255,178,56,0.12) 0, transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(79,176,232,0.10) 0, transparent 35%);
+}
+
+h1, h2, h3, .display {
+  font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+  font-weight: 700;
+}
+
+#app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 18px 60px;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ---------------- topbar ---------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.brand {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--canopy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand.small { font-size: 18px; color: var(--accent, var(--canopy)); }
+
+.stat-pills { display: flex; gap: 8px; align-items: center; }
+.pill {
+  background: var(--paper-2);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  color: var(--canopy);
+}
+.pill.reset {
+  cursor: pointer;
+  padding: 7px 11px;
+  color: var(--ink-soft);
+  font-weight: 900;
+}
+.pill.reset:hover { color: var(--danger); }
+
+.back-btn {
+  background: var(--paper-2);
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 800;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--canopy);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.back-btn:hover { transform: translateY(-1px); }
+
+/* ---------------- mascot banner ---------------- */
+.mascot-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper-2);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.mascot-emoji {
+  font-size: 42px;
+  flex-shrink: 0;
+  animation: bob 2.6s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+.speech {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--canopy);
+  line-height: 1.4;
+}
+
+/* ---------------- overall progress ---------------- */
+.overall-bar-wrap { margin-bottom: 22px; }
+.overall-bar-label { font-size: 13px; font-weight: 800; color: var(--ink-soft); margin-bottom: 6px; }
+.overall-bar {
+  height: 12px;
+  background: #E7EFE9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.overall-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--leaf), var(--sky));
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+
+/* ---------------- jungle map ---------------- */
+.map {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 10px 0 20px;
+}
+.map::before {
+  content: "";
+  position: absolute;
+  top: 40px;
+  bottom: 40px;
+  left: 50%;
+  width: 6px;
+  transform: translateX(-50%);
+  background-image: linear-gradient(var(--sun), var(--sun));
+  background-size: 6px 18px;
+  background-repeat: repeat-y;
+  opacity: .35;
+  border-radius: 3px;
+}
+
+.map-node {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+.map-node.right { flex-direction: row-reverse; text-align: right; }
+
+.node-ring {
+  --pct: 0;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background:
+    radial-gradient(closest-side, var(--paper-2) 68%, transparent 69% 100%),
+    conic-gradient(var(--accent) calc(var(--pct) * 1%), #E7EFE9 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease;
+}
+.map-node:hover .node-ring { transform: scale(1.06); }
+.node-emoji { font-size: 34px; }
+
+.node-info { background: var(--paper-2); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow); flex: 1; }
+.node-title { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 17px; color: var(--accent); }
+.node-tag { font-size: 12.5px; color: var(--ink-soft); font-weight: 700; margin-top: 2px; }
+.node-progress { font-size: 12px; font-weight: 800; color: var(--ink-soft); margin-top: 6px; }
+
+.star { color: #DCE3DD; font-size: 13px; }
+.star.on { color: var(--sun); }
+
+/* ---------------- unit view ---------------- */
+.unit-tagline { color: var(--ink-soft); font-weight: 700; margin: -8px 0 18px; }
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .lesson-grid { grid-template-columns: 1fr; }
+}
+
+.lesson-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.lesson-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.lesson-emoji { font-size: 30px; margin-bottom: 6px; }
+.lesson-title { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 16px; color: var(--canopy); margin-bottom: 6px; }
+.lesson-stars { margin-bottom: 8px; }
+.lesson-cta { font-size: 12.5px; font-weight: 800; color: var(--accent); }
+
+/* ---------------- learn view ---------------- */
+.learn-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  border-top: 8px solid var(--accent);
+}
+.learn-intro { font-weight: 800; font-size: 16px; color: var(--canopy); margin-bottom: 14px; line-height: 1.5; }
+.learn-points { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; }
+.learn-points li { font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+.learn-points b { color: var(--accent); }
+
+.example-box {
+  margin-top: 18px;
+  background: #FBF6EA;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+.example-title { font-weight: 800; font-size: 14px; color: var(--canopy); margin-bottom: 8px; }
+.example-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.example-table td { padding: 6px 8px; border-bottom: 1px dashed #E3D9BF; color: var(--ink); }
+.example-table tr:last-child td { border-bottom: none; }
+
+.cta-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  background: var(--accent, var(--leaf));
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 15px;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform .12s ease;
+}
+.cta-btn:hover { transform: translateY(-2px); }
+.cta-btn:active { transform: translateY(0); }
+.cta-btn.small { width: auto; padding: 11px 22px; margin-top: 14px; font-size: 14px; }
+.cta-btn.ghost { background: var(--paper-2); color: var(--canopy); border: 2px solid #E1E8E2; box-shadow: none; }
+
+/* ---------------- practice view ---------------- */
+.progress-dots { display: flex; gap: 6px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #E1E8E2; }
+.dot.done { background: var(--leaf); }
+.dot.active { background: var(--accent, var(--sky)); transform: scale(1.3); }
+
+.question-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  border-top: 8px solid var(--accent);
+}
+.question-card.brain { border-top-color: var(--mango); background: linear-gradient(180deg, #FFF3EE 0%, var(--paper-2) 70px); }
+.q-count { font-size: 12.5px; font-weight: 800; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; }
+.q-text { font-family: "Baloo 2", sans-serif; font-weight: 700; font-size: 19px; color: var(--canopy); margin: 10px 0 18px; line-height: 1.45; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option-btn {
+  text-align: left;
+  background: #F5F1E6;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .12s ease;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--accent); transform: translateX(3px); }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { background: #E4F5E7; border-color: var(--leaf); color: #1F6B34; }
+.option-btn.wrong { background: #FCE8E6; border-color: var(--danger); color: #A23A32; }
+
+.feedback { margin-top: 6px; }
+.fb-box { border-radius: var(--radius-md); padding: 14px 16px; margin-top: 14px; font-size: 14px; line-height: 1.5; }
+.fb-correct { background: #E4F5E7; color: #1F6B34; }
+.fb-wrong { background: #FFF1E3; color: #7A4A15; }
+.fb-head { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 15.5px; margin-bottom: 6px; }
+.fb-body b { color: inherit; }
+
+/* ---------------- summary view ---------------- */
+.summary-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  margin-top: 40px;
+  border-top: 10px solid var(--accent);
+}
+.summary-emoji { font-size: 56px; margin-bottom: 6px; }
+.summary-title { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 20px; color: var(--canopy); margin-bottom: 10px; }
+.summary-stars { font-size: 26px; margin-bottom: 10px; }
+.summary-score { font-weight: 800; color: var(--ink-soft); margin-bottom: 8px; }
+.summary-xp { display: inline-block; background: #FFF3D6; color: #8A6300; font-weight: 800; font-size: 13px; padding: 8px 14px; border-radius: 999px; margin-bottom: 10px; }
+.summary-actions { display: flex; gap: 10px; margin-top: 18px; }
+.summary-actions .cta-btn { margin-top: 0; }
+
+/* ---------------- confetti ---------------- */
+#confetti-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999;
+}
+.confetti-piece {
+  position: absolute;
+  top: 30vh;
+  width: 9px;
+  height: 14px;
+  opacity: 0.95;
+  animation-name: fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes fall {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(calc(var(--dx) * 120px), 62vh) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ---------------- nav pill extras ---------------- */
+.pill.navbtn { cursor: pointer; }
+.pill.navbtn:hover { transform: translateY(-1px); }
+
+/* ---------------- status chips ---------------- */
+.chip { display: inline-block; font-size: 10.5px; font-weight: 900; padding: 3px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .02em; }
+.status-new { background: #EDEDED; color: #8A8A8A; }
+.status-progress { background: #FFF3D6; color: #8A6300; }
+.status-done { background: #E4F5E7; color: #1F6B34; }
+.status-mastered { background: #FFE3D6; color: #B5461F; }
+
+.node-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chrow-title-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ---------------- random practice CTA (unit page) ---------------- */
+.random-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: linear-gradient(135deg, #FFF7E8, #FFF1E3);
+  border: 2px dashed var(--accent, var(--sun));
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.random-cta-text { display: flex; flex-direction: column; gap: 3px; font-size: 13px; color: var(--canopy); max-width: 420px; }
+.random-cta-text b { font-family: "Baloo 2", sans-serif; font-size: 15.5px; }
+.random-cta-stats { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); }
+.question-card.random-q { border-top-color: var(--sun); }
+
+/* ---------------- progress dashboard ---------------- */
+.progress-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+@media (max-width: 560px) { .progress-summary-grid { grid-template-columns: repeat(2, 1fr); } }
+.psum-card {
+  background: var(--paper-2);
+  border-radius: var(--radius-md);
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.psum-num { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 24px; color: var(--leaf); }
+.psum-label { font-size: 11px; font-weight: 800; color: var(--ink-soft); margin-top: 4px; line-height: 1.3; }
+
+.chapter-list { display: flex; flex-direction: column; gap: 10px; }
+.chapter-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper-2);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border-left: 6px solid var(--accent);
+  transition: transform .12s ease;
+}
+.chapter-row:hover { transform: translateX(3px); }
+.chrow-emoji { font-size: 28px; flex-shrink: 0; }
+.chrow-main { flex: 1; min-width: 0; }
+.chrow-title { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 15px; color: var(--accent); }
+.chrow-bar { height: 8px; background: #E7EFE9; border-radius: 999px; overflow: hidden; margin: 7px 0 6px; }
+.chrow-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s ease; }
+.chrow-meta { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); }
+
+/* ---------------- misc ---------------- */
+::selection { background: var(--sun); color: #fff; }
+
+button { font-family: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-emoji { animation: none; }
+  .confetti-piece { animation: none; display: none; }
+}
+
+</style>
+</head>
+<body>
+<div id="confetti-layer"></div>
+<div id="app"></div>
+<script>
+/* ==========================================================================
+   JUNGLE MATH QUEST — content data
+   Based on: New Maths Ahead, Class 5 — Chapters 1-4 (Orient BlackSwan)
+   ========================================================================== */
+
+const UNITS = [
+  {
+    id: "u1",
+    name: "Big Number Explorer",
+    tagline: "Crores, lakhs & giant numbers",
+    emoji: "🔢",
+    color: "#3FA34D",
+    lessons: [
+      {
+        id: "u1l1",
+        title: "Place Value Palace",
+        emoji: "🏰",
+        learn: {
+          intro: "Every digit in a number lives in its own 'room' — and the room it's in decides how much it's really worth!",
+          points: [
+            "In the Indian system, we group digits as: Ones, Tens, Hundreds, Thousands, Ten Thousands, <b>Lakhs</b>, Ten Lakhs, <b>Crores</b>.",
+            "Commas go after the first 3 digits (from the right), then after every 2 digits: <b>7,45,32,891</b>.",
+            "1 lakh = 1,00,000 &nbsp;•&nbsp; 1 crore = 1,00,00,000 = 100 lakhs."
+          ],
+          example: {
+            title: "Example: 7,45,32,891",
+            rows: [
+              ["Crore", "7", "7,00,00,000"],
+              ["Ten Lakh", "4", "40,00,000"],
+              ["Lakh", "5", "5,00,000"],
+              ["Ten Th.", "3", "30,000"],
+              ["Th.", "2", "2,000"],
+              ["Hundred", "8", "800"],
+              ["Tens", "9", "90"],
+              ["Ones", "1", "1"]
+            ]
+          }
+        },
+        questions: [
+          {
+            q: "In the number <b>45,32,891</b>, what is the place value of the digit <b>5</b>?",
+            type: "mcq",
+            options: ["500", "5,000", "50,000", "5,00,000"],
+            answer: "5,00,000",
+            explain: "5 sits in the <b>lakhs</b> place. Value = 5 × 1,00,000 = <b>5,00,000</b>."
+          },
+          {
+            q: "How do we read <b>1,00,00,000</b>?",
+            type: "mcq",
+            options: ["One lakh", "Ten lakh", "One crore", "Ten crore"],
+            answer: "One crore",
+            explain: "100 lakhs make 1 crore, so 1,00,00,000 is read as <b>one crore</b>."
+          },
+          {
+            q: "Write 'sixty-three lakh twenty thousand five' in figures.",
+            type: "mcq",
+            options: ["6,32,005", "63,20,005", "63,20,500", "6,320,005"],
+            answer: "63,20,005",
+            explain: "63 lakh → 63,00,000. Plus 20 thousand → 20,000. Plus 5 → 5. Total = <b>63,20,005</b>."
+          },
+          {
+            q: "🧠 Brain Booster: A number has 4 in the crore's place and 7 in the lakh's place — every other digit is 0. What's the number?",
+            type: "mcq",
+            options: ["4,70,00,000", "47,00,000", "4,07,00,000", "4,07,000"],
+            answer: "4,07,00,000",
+            explain: "4 crore = 4,00,00,000. 7 lakh = 7,00,000. Add them: 4,00,00,000 + 7,00,000 = <b>4,07,00,000</b>."
+          },
+          {
+            q: "How many zeros are there in 1 crore?",
+            type: "mcq",
+            options: ["5", "6", "7", "8"],
+            answer: "7",
+            explain: "1 crore = 1,00,00,000 — count them: 1 followed by <b>7 zeros</b>."
+          }
+        ]
+      },
+      {
+        id: "u1l2",
+        title: "Expand & Compare",
+        emoji: "⚖️",
+        learn: {
+          intro: "Expanded form breaks a number into the value of each digit added together — and it's the secret trick for comparing numbers fast!",
+          points: [
+            "Expanded form of 52,304 = 50,000 + 2,000 + 300 + 0 + 4.",
+            "To compare two numbers: first check <b>how many digits</b> each has — more digits always means a bigger number.",
+            "If the digit-count is the same, compare digit by digit from the <b>left</b> until one is bigger."
+          ],
+          example: {
+            title: "Comparing 4,64,396,789 & 4,63,989,789",
+            rows: [["Compare from the left: 4=4, 6=6, 4 vs 3 → 4 is bigger, so 4,64,396,789 wins!", "", ""]]
+          }
+        },
+        questions: [
+          {
+            q: "What is the expanded form of <b>52,304</b>?",
+            type: "mcq",
+            options: ["5,000+200+30+4", "50,000+2,000+300+0+4", "52,000+300+4", "50,000+2,304"],
+            answer: "50,000+2,000+300+0+4",
+            explain: "Break each digit by its place: 5→50,000, 2→2,000, 3→300, 0→0, 4→4."
+          },
+          {
+            q: "Which is greater: <b>5,64,321</b> or <b>5,64,312</b>?",
+            type: "mcq",
+            options: ["5,64,321", "5,64,312", "They are equal", "Can't tell"],
+            answer: "5,64,321",
+            explain: "Both match until the tens place: 2 vs 1. Since 2 > 1, <b>5,64,321</b> is greater."
+          },
+          {
+            q: "Arrange in ascending (smallest to largest) order: 35,000 &nbsp; 34,512 &nbsp; 34,521",
+            type: "mcq",
+            options: [
+              "34,512 < 34,521 < 35,000",
+              "34,521 < 34,512 < 35,000",
+              "35,000 < 34,521 < 34,512",
+              "34,512 < 35,000 < 34,521"
+            ],
+            answer: "34,512 < 34,521 < 35,000",
+            explain: "All have 5 digits. 34,512 and 34,521 tie until the tens place (1<2), so 34,512 is smallest, then 34,521, then 35,000."
+          },
+          {
+            q: "🧠 Brain Booster: Which is bigger — <b>9,99,999</b> or <b>10,00,000</b>?",
+            type: "mcq",
+            options: ["9,99,999", "10,00,000", "Equal", "Not possible to know"],
+            answer: "10,00,000",
+            explain: "9,99,999 has 6 digits, but 10,00,000 has 7 digits. <b>More digits = bigger number</b>, no need to compare further!"
+          },
+          {
+            q: "Using the digits 7, 3, 2 (each once), what's the <b>greatest</b> 3-digit number you can form?",
+            type: "mcq",
+            options: ["237", "273", "732", "723"],
+            answer: "732",
+            explain: "To make the biggest number, put the biggest digit first: 7, then 3, then 2 → <b>732</b>."
+          }
+        ]
+      },
+      {
+        id: "u1l3",
+        title: "Round It Up",
+        emoji: "🎯",
+        learn: {
+          intro: "Rounding turns a messy number into a friendly, tidy one — super useful for quick estimates!",
+          points: [
+            "Look at the digit just <b>after</b> the place you're rounding to.",
+            "If that digit is <b>5 or more</b>, round UP. If it's <b>4 or less</b>, round DOWN (keep it the same).",
+            "Every digit after the rounding place becomes 0."
+          ],
+          example: {
+            title: "Example",
+            rows: [
+              ["Round 1,259 to the nearest hundred", "tens digit = 5 → round UP", "1,300"],
+              ["Round 4,826 to the nearest hundred", "tens digit = 2 → round DOWN", "4,800"]
+            ]
+          }
+        },
+        questions: [
+          {
+            q: "Round <b>38,249</b> to the nearest thousand.",
+            type: "mcq",
+            options: ["38,000", "39,000", "38,200", "40,000"],
+            answer: "38,000",
+            explain: "The hundreds digit is 2 (< 5), so we round DOWN: <b>38,000</b>."
+          },
+          {
+            q: "Round <b>4,826</b> to the nearest hundred.",
+            type: "mcq",
+            options: ["4,800", "4,900", "4,830", "5,000"],
+            answer: "4,800",
+            explain: "The tens digit is 2 (< 5), so we round DOWN: <b>4,800</b>."
+          },
+          {
+            q: "Round <b>1,259</b> to the nearest hundred.",
+            type: "mcq",
+            options: ["1,200", "1,250", "1,300", "1,000"],
+            answer: "1,300",
+            explain: "The tens digit is 5, so we round UP: <b>1,300</b>."
+          },
+          {
+            q: "Round <b>51,324</b> to the nearest ten thousand.",
+            type: "mcq",
+            options: ["50,000", "51,000", "60,000", "52,000"],
+            answer: "50,000",
+            explain: "The thousands digit is 1 (< 5), so we round DOWN: <b>50,000</b>."
+          },
+          {
+            q: "🧠 Brain Booster: A number rounds to <b>500</b> when rounded to the nearest hundred. Which of these could <u>NOT</u> be that number?",
+            type: "mcq",
+            options: ["452", "549", "498", "551"],
+            answer: "551",
+            explain: "Numbers from 450 to 549 all round to 500. But 551 is closer to 600, so it rounds to <b>600</b> — it doesn't fit!"
+          }
+        ]
+      },
+      {
+        id: "u1l4",
+        title: "Roman Riddles",
+        emoji: "🏛️",
+        learn: {
+          intro: "The Romans wrote numbers using letters instead of digits! Once you know the code, it's like solving a fun riddle.",
+          points: [
+            "Symbols: I=1, V=5, X=10, L=50, C=100, D=500, M=1000.",
+            "A smaller symbol AFTER a bigger one means ADD (VI = 5+1 = 6).",
+            "A smaller symbol BEFORE a bigger one means SUBTRACT (IX = 10-1 = 9).",
+            "I, X, C, M can repeat up to 3 times in a row. V, L, D never repeat."
+          ],
+          example: {
+            title: "Example",
+            rows: [
+              ["XL", "50 - 10", "40"],
+              ["XXIX", "10+10+(10-1)", "29"]
+            ]
+          }
+        },
+        questions: [
+          {
+            q: "What number is <b>XL</b>?",
+            type: "mcq",
+            options: ["60", "40", "10", "90"],
+            answer: "40",
+            explain: "X (10) comes before L (50), so we subtract: 50 - 10 = <b>40</b>."
+          },
+          {
+            q: "Write <b>49</b> in Roman numerals.",
+            type: "mcq",
+            options: ["IL", "XLIX", "XLVIIII", "XIL"],
+            answer: "XLIX",
+            explain: "49 = 40 + 9 = XL + IX = <b>XLIX</b>."
+          },
+          {
+            q: "What is the value of <b>CD</b>?",
+            type: "mcq",
+            options: ["600", "150", "400", "900"],
+            answer: "400",
+            explain: "C (100) before D (500) means subtract: 500 - 100 = <b>400</b>."
+          },
+          {
+            q: "Which of these Roman numerals is written the <u>wrong</u> way?",
+            type: "mcq",
+            options: ["IX", "XL", "IIII", "MM"],
+            answer: "IIII",
+            explain: "I can repeat at most 3 times. Four (4) should be written as <b>IV</b>, not IIII."
+          },
+          {
+            q: "🧠 Brain Booster: What is the Roman numeral for the smallest 3-digit number (100)?",
+            type: "mcq",
+            options: ["L", "C", "D", "M"],
+            answer: "C",
+            explain: "100 in Roman numerals is simply <b>C</b>."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u2",
+    name: "Operation Station",
+    tagline: "Add, subtract, multiply, divide & more",
+    emoji: "⚙️",
+    color: "#4FB0E8",
+    lessons: [
+      {
+        id: "u2l1",
+        title: "Add & Subtract Big Numbers",
+        emoji: "➕",
+        learn: {
+          intro: "Big numbers add and subtract just like small ones — line up the place values and work column by column!",
+          points: [
+            "Always line up ONES under ONES, TENS under TENS, and so on.",
+            "Carry over when a column adds to 10 or more.",
+            "Check subtraction by adding your answer back to the number you subtracted — it should give you the number you started with!"
+          ],
+          example: {
+            title: "Example",
+            rows: [["45,678 + 32,145", "line up & add each column", "77,823"]]
+          }
+        },
+        questions: [
+          { q: "45,678 + 32,145 = ?", type: "mcq", options: ["77,823", "78,823", "76,823", "77,713"], answer: "77,823", explain: "Add column by column: 8+5=13 (write 3 carry 1) ... the total is <b>77,823</b>." },
+          { q: "90,000 − 45,678 = ?", type: "mcq", options: ["44,322", "45,322", "44,422", "54,322"], answer: "44,322", explain: "Borrowing through the zeros: 90,000 − 45,678 = <b>44,322</b>." },
+          { q: "Town A has 45,689 people and Town B has 53,897. How many MORE people live in Town B?", type: "mcq", options: ["8,208", "7,208", "9,208", "8,108"], answer: "8,208", explain: "Subtract the smaller from the bigger: 53,897 − 45,689 = <b>8,208</b>." },
+          { q: "🧠 Brain Booster: I added two numbers and got 1,00,000. One of the numbers is 45,678. What's the other?", type: "mcq", options: ["54,322", "55,322", "54,222", "45,322"], answer: "54,322", explain: "Subtract to find the missing addend: 1,00,000 − 45,678 = <b>54,322</b>." },
+          { q: "Which is the best estimate for 68,432 − 29,876?", type: "mcq", options: ["18,000", "28,000", "38,000", "48,000"], answer: "38,000", explain: "68,432 − 29,876 = 38,556, which is closest to <b>38,000</b>." }
+        ]
+      },
+      {
+        id: "u2l2",
+        title: "Multiply Like a Pro",
+        emoji: "✖️",
+        learn: {
+          intro: "Multiplying big numbers is just repeated addition in disguise. Break the number into parts, multiply each part, then add!",
+          points: [
+            "278 × 12 → split 12 into 10 + 2: (278×10) + (278×2) = 2,780 + 556 = 3,336.",
+            "Keep your digits lined up neatly by place value — it stops silly mistakes!",
+            "Estimate first (round the numbers) so you know roughly what answer to expect."
+          ],
+          example: {
+            title: "Example: 234 × 12",
+            rows: [["234 × 10 = 2,340", "234 × 2 = 468", "2,340 + 468 = 2,808"]]
+          }
+        },
+        questions: [
+          { q: "234 × 12 = ?", type: "mcq", options: ["2,708", "2,808", "2,608", "2,908"], answer: "2,808", explain: "234×10=2,340 and 234×2=468. Add them: 2,340+468 = <b>2,808</b>." },
+          { q: "1,434 × 2 = ?", type: "mcq", options: ["2,768", "2,868", "2,968", "2,678"], answer: "2,868", explain: "1,434 × 2 = <b>2,868</b> (double every digit, carrying as needed)." },
+          { q: "A box holds 244 paper clips. There are 65 such boxes. How many clips in total?", type: "mcq", options: ["15,760", "15,860", "14,860", "15,960"], answer: "15,860", explain: "244 × 65 = <b>15,860</b>. (244×60=14,640, 244×5=1,220, total 15,860.)" },
+          { q: "🧠 Brain Booster: If 25 × 36 = 900, what is 250 × 36?", type: "mcq", options: ["900", "9,000", "90,000", "3,600"], answer: "9,000", explain: "250 is 25 × 10, so the answer is also 10 times bigger: 900 × 10 = <b>9,000</b>." },
+          { q: "105 × 7 = ?", type: "mcq", options: ["735", "725", "745", "715"], answer: "735", explain: "100×7=700, 5×7=35. Add: 700+35 = <b>735</b>." }
+        ]
+      },
+      {
+        id: "u2l3",
+        title: "Divide & Conquer",
+        emoji: "➗",
+        learn: {
+          intro: "Division shares a big number into equal groups. Sometimes there's a bit left over — that's called the remainder!",
+          points: [
+            "Divide step by step from the left, bringing down one digit at a time.",
+            "Check your work: (Quotient × Divisor) + Remainder should equal the number you started with.",
+            "The remainder must always be smaller than the number you're dividing by."
+          ],
+          example: {
+            title: "Example: 1,976 ÷ 35",
+            rows: [["35 × 56 = 1,960", "1,976 − 1,960 = 16", "Quotient = 56, Remainder = 16"]]
+          }
+        },
+        questions: [
+          { q: "480 ÷ 4 = ?", type: "mcq", options: ["110", "120", "125", "12"], answer: "120", explain: "480 ÷ 4 = <b>120</b> exactly, no remainder." },
+          { q: "1,976 apples are packed into boxes of 35 apples each. How many full boxes, and how many apples are left over?", type: "mcq", options: ["56 boxes, 16 left", "55 boxes, 51 left", "56 boxes, 6 left", "57 boxes, 1 left"], answer: "56 boxes, 16 left", explain: "35 × 56 = 1,960. 1,976 − 1,960 = 16 left over. So <b>56 boxes, 16 apples left</b>." },
+          { q: "A car covers 663 km in 13 hours at a steady speed. How many km per hour?", type: "mcq", options: ["49", "51", "53", "48"], answer: "51", explain: "663 ÷ 13 = <b>51</b> km per hour exactly." },
+          { q: "🧠 Brain Booster: A number divided by 8 gives quotient 45 and remainder 3. What's the number?", type: "mcq", options: ["360", "363", "368", "365"], answer: "363", explain: "Number = (Quotient × Divisor) + Remainder = (45 × 8) + 3 = 360 + 3 = <b>363</b>." },
+          { q: "90,300 ÷ 5 = ?", type: "mcq", options: ["18,060", "18,600", "17,060", "18,160"], answer: "18,060", explain: "90,300 ÷ 5 = <b>18,060</b>." }
+        ]
+      },
+      {
+        id: "u2l4",
+        title: "BODMAS Boss",
+        emoji: "🧩",
+        learn: {
+          intro: "When a sum has lots of different operations, there's a strict ORDER to follow — otherwise everyone gets a different answer!",
+          points: [
+            "<b>B</b>rackets first, then <b>O</b>f/<b>D</b>ivision and <b>M</b>ultiplication (left to right), then <b>A</b>ddition and <b>S</b>ubtraction (left to right).",
+            "Easy way to remember: <b>D</b>ear <b>M</b>other <b>A</b>nd <b>S</b>ister (after brackets)."
+          ],
+          example: {
+            title: "Example: 16 + 12 ÷ 4 × 5 − 2",
+            rows: [["12 ÷ 4 = 3", "3 × 5 = 15", "16 + 15 − 2 = 29"]]
+          }
+        },
+        questions: [
+          { q: "16 + 12 ÷ 4 × 5 − 2 = ?", type: "mcq", options: ["27", "29", "31", "20"], answer: "29", explain: "Divide first: 12÷4=3. Multiply: 3×5=15. Then: 16+15−2 = <b>29</b>." },
+          { q: "20 + 16 ÷ 2 = ?", type: "mcq", options: ["18", "28", "36", "8"], answer: "28", explain: "Divide first: 16÷2=8. Then add: 20+8 = <b>28</b>." },
+          { q: "(5 × 2) + 7 = ?", type: "mcq", options: ["17", "24", "19", "12"], answer: "17", explain: "Brackets first: 5×2=10. Then: 10+7 = <b>17</b>." },
+          { q: "100 − [88 − (56 + 16)] = ?", type: "mcq", options: ["84", "72", "16", "60"], answer: "84", explain: "Inner bracket: 56+16=72. Next: 88−72=16. Finally: 100−16 = <b>84</b>." },
+          { q: "🧠 Brain Booster: In 3 + 4 × 2, which operation do you do FIRST?", type: "mcq", options: ["Addition (3+4)", "Multiplication (4×2)", "It doesn't matter", "Whichever is on the left"], answer: "Multiplication (4×2)", explain: "BODMAS says multiplication comes before addition: 4×2=8, then 3+8 = <b>11</b>." }
+        ]
+      },
+      {
+        id: "u2l5",
+        title: "Average Adventures",
+        emoji: "📊",
+        learn: {
+          intro: "An average is one single number that represents a whole group — like the 'typical' score, height, or speed.",
+          points: [
+            "Average = (sum of all the numbers) ÷ (how many numbers there are).",
+            "Averages help us compare two groups fairly, even if they have different numbers of items."
+          ],
+          example: {
+            title: "Example: Average of 5, 10, 15",
+            rows: [["Sum = 5+10+15 = 30", "Count = 3", "Average = 30 ÷ 3 = 10"]]
+          }
+        },
+        questions: [
+          { q: "Find the average of 5, 10 and 15.", type: "mcq", options: ["10", "15", "30", "8"], answer: "10", explain: "Sum = 5+10+15 = 30. Average = 30 ÷ 3 = <b>10</b>." },
+          { q: "A student scored 80, 90 and 100 in three tests. What's the average score?", type: "mcq", options: ["85", "90", "95", "270"], answer: "90", explain: "Sum = 80+90+100 = 270. Average = 270 ÷ 3 = <b>90</b>." },
+          { q: "A train travels 160 km in 4 hours at a steady pace. What's its average speed?", type: "mcq", options: ["35 km/h", "40 km/h", "45 km/h", "640 km/h"], answer: "40 km/h", explain: "Average speed = total distance ÷ total time = 160 ÷ 4 = <b>40 km/h</b>." },
+          { q: "🧠 Brain Booster: The average of 4 numbers is 20. What is their total sum?", type: "mcq", options: ["20", "24", "80", "5"], answer: "80", explain: "Average × Count = Sum, so 20 × 4 = <b>80</b>." },
+          { q: "Find the average of 20, 30 and 40.", type: "mcq", options: ["25", "30", "35", "90"], answer: "30", explain: "Sum = 20+30+40 = 90. Average = 90 ÷ 3 = <b>30</b>." }
+        ]
+      },
+      {
+        id: "u2l6",
+        title: "Unitary Method Missions",
+        emoji: "🧮",
+        learn: {
+          intro: "The unitary method is a superpower for solving 'shopping' problems: first find the cost of ONE thing, then work out the rest!",
+          points: [
+            "Step 1: Divide to find the value of ONE unit.",
+            "Step 2: Multiply that by however many units you actually need."
+          ],
+          example: {
+            title: "Example: Cost of 5 pens is ₹75. Find cost of 7 pens.",
+            rows: [["Cost of 1 pen = 75 ÷ 5 = ₹15", "Cost of 7 pens = 15 × 7", "= ₹105"]]
+          }
+        },
+        questions: [
+          { q: "The cost of 5 pens is ₹75. What's the cost of ONE pen?", type: "mcq", options: ["₹10", "₹15", "₹20", "₹375"], answer: "₹15", explain: "Cost of 1 pen = 75 ÷ 5 = <b>₹15</b>." },
+          { q: "If 1 pen costs ₹15, what do 7 pens cost?", type: "mcq", options: ["₹95", "₹100", "₹105", "₹115"], answer: "₹105", explain: "Cost of 7 pens = 15 × 7 = <b>₹105</b>." },
+          { q: "A car covers 663 km in 13 hours at a steady speed. How far does it travel in 5 hours?", type: "mcq", options: ["245 km", "250 km", "255 km", "260 km"], answer: "255 km", explain: "Distance in 1 hour = 663 ÷ 13 = 51 km. In 5 hours = 51 × 5 = <b>255 km</b>." },
+          { q: "🧠 Brain Booster: 18 buses carry 936 passengers in total (same number in each). How many passengers can 25 such buses carry?", type: "mcq", options: ["1,200", "1,250", "1,300", "1,350"], answer: "1,300", explain: "Passengers per bus = 936 ÷ 18 = 52. For 25 buses: 52 × 25 = <b>1,300</b>." },
+          { q: "A dozen (12) books cost ₹72. What's the cost of 18 books?", type: "mcq", options: ["₹96", "₹102", "₹108", "₹114"], answer: "₹108", explain: "Cost of 1 book = 72 ÷ 12 = ₹6. Cost of 18 books = 6 × 18 = <b>₹108</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u3",
+    name: "Factor Forest",
+    tagline: "Factors, multiples, HCF & LCM",
+    emoji: "🌳",
+    color: "#FF7A5C",
+    lessons: [
+      {
+        id: "u3l1",
+        title: "Factors, Multiples & Prime Detectives",
+        emoji: "🕵️",
+        learn: {
+          intro: "Factors and multiples are two sides of the same coin — and prime numbers are the 'building blocks' of every number!",
+          points: [
+            "A <b>factor</b> of a number divides it exactly, with nothing left over (factors of 12: 1,2,3,4,6,12).",
+            "A <b>multiple</b> is what you get by skip-counting (multiples of 7: 7,14,21,28...).",
+            "A <b>prime</b> number has exactly 2 factors (1 and itself). A <b>composite</b> number has more than 2."
+          ],
+          example: {
+            title: "Example",
+            rows: [["Factors of 36", "1,2,3,4,6,9,12,18,36", "9 factors!"]]
+          }
+        },
+        questions: [
+          { q: "Which of these is a factor of 36?", type: "mcq", options: ["5", "6", "7", "8"], answer: "6", explain: "36 ÷ 6 = 6 exactly, so <b>6</b> is a factor of 36." },
+          { q: "Which of these is a multiple of 7?", type: "mcq", options: ["27", "28", "30", "34"], answer: "28", explain: "7 × 4 = <b>28</b>, so 28 is a multiple of 7." },
+          { q: "Is 51 prime or composite?", type: "mcq", options: ["Prime", "Composite"], answer: "Composite", explain: "51 = 3 × 17, so it has more than 2 factors — it's <b>composite</b>." },
+          { q: "🧠 Brain Booster: Which of these numbers is prime?", type: "mcq", options: ["21", "23", "25", "27"], answer: "23", explain: "21=3×7, 25=5×5, 27=3×9 — all composite. Only <b>23</b> has just two factors: 1 and 23." },
+          { q: "How many factors does 12 have?", type: "mcq", options: ["4", "5", "6", "7"], answer: "6", explain: "Factors of 12: 1, 2, 3, 4, 6, 12 — that's <b>6</b> factors." }
+        ]
+      },
+      {
+        id: "u3l2",
+        title: "Prime Factorisation Trees",
+        emoji: "🌲",
+        learn: {
+          intro: "Every number can be broken down into a unique set of prime numbers multiplied together — like a secret DNA code!",
+          points: [
+            "Keep dividing by the smallest prime number possible until you're left with only primes.",
+            "Draw it as a 'tree' — it's a fun, visual way to factorise any number."
+          ],
+          example: {
+            title: "Example: 24",
+            rows: [["24 = 2 × 12", "12 = 2 × 6", "6 = 2 × 3 → 24 = 2×2×2×3"]]
+          }
+        },
+        questions: [
+          { q: "What is the prime factorisation of 24?", type: "mcq", options: ["2×2×2×3", "2×3×4", "2×2×6", "3×8"], answer: "2×2×2×3", explain: "24 → 2×12 → 2×2×6 → 2×2×2×3. All factors are prime: <b>2×2×2×3</b>." },
+          { q: "What is the prime factorisation of 36?", type: "mcq", options: ["2×2×3×3", "2×18", "4×9", "2×3×6"], answer: "2×2×3×3", explain: "36 → 2×18 → 2×2×9 → 2×2×3×3. All prime: <b>2×2×3×3</b>." },
+          { q: "What are the prime factors of 30 (without repeats)?", type: "mcq", options: ["2, 3, 5", "1, 2, 3, 5", "2, 15", "3, 10"], answer: "2, 3, 5", explain: "30 = 2×3×5. The prime factors are <b>2, 3, and 5</b>." },
+          { q: "🧠 Brain Booster: A number's prime factorisation is 2×2×3×5. What is the number?", type: "mcq", options: ["30", "60", "20", "45"], answer: "60", explain: "2×2×3×5 = 4×3×5 = 12×5 = <b>60</b>." },
+          { q: "Which of these is NOT a prime factor of 42?", type: "mcq", options: ["2", "3", "6", "7"], answer: "6", explain: "42 = 2×3×7. Its prime factors are 2, 3 and 7 — <b>6</b> is not prime, so it can't be listed as a prime factor." }
+        ]
+      },
+      {
+        id: "u3l3",
+        title: "HCF Hunt",
+        emoji: "🔍",
+        learn: {
+          intro: "HCF (Highest Common Factor) is the biggest number that divides two or more numbers exactly — perfect for splitting things into equal groups.",
+          points: [
+            "List the factors of each number, find the common ones, then pick the biggest.",
+            "Or use prime factorisation: multiply the prime factors that BOTH numbers share.",
+            "Numbers whose HCF is 1 are called <b>coprime</b> numbers."
+          ],
+          example: {
+            title: "Example: HCF of 44 and 60",
+            rows: [["44 = 2×2×11", "60 = 2×2×3×5", "Common: 2×2 = HCF is 4"]]
+          }
+        },
+        questions: [
+          { q: "What is the HCF of 12 and 18?", type: "mcq", options: ["3", "6", "9", "12"], answer: "6", explain: "Factors of 12: 1,2,3,4,6,12. Factors of 18: 1,2,3,6,9,18. Biggest common factor = <b>6</b>." },
+          { q: "What is the HCF of 20 and 30?", type: "mcq", options: ["5", "10", "15", "20"], answer: "10", explain: "Factors of 20: 1,2,4,5,10,20. Factors of 30: 1,2,3,5,6,10,15,30. Biggest common factor = <b>10</b>." },
+          { q: "44 = 2×2×11 and 60 = 2×2×3×5. What is their HCF?", type: "mcq", options: ["2", "4", "6", "8"], answer: "4", explain: "The prime factors common to both are 2×2 = <b>4</b>." },
+          { q: "🧠 Brain Booster: Two numbers have HCF = 1. What do we call such numbers?", type: "mcq", options: ["Twin numbers", "Coprime numbers", "Prime numbers", "Equal numbers"], answer: "Coprime numbers", explain: "When the only common factor of two numbers is 1, they're called <b>coprime numbers</b>." },
+          { q: "What is the HCF of 9 and 28?", type: "mcq", options: ["1", "2", "3", "9"], answer: "1", explain: "9 = 3×3 and 28 = 2×2×7 share no common prime factor, so their HCF is <b>1</b> — they're coprime!" }
+        ]
+      },
+      {
+        id: "u3l4",
+        title: "LCM Quest",
+        emoji: "🗺️",
+        learn: {
+          intro: "LCM (Lowest Common Multiple) is the smallest number that two or more numbers both divide into — great for timing patterns and syncing events!",
+          points: [
+            "List multiples of each number and find the smallest one they share.",
+            "Handy formula: HCF × LCM = the product of the two numbers."
+          ],
+          example: {
+            title: "Example: LCM of 4 and 6",
+            rows: [["Multiples of 4: 4,8,12,16...", "Multiples of 6: 6,12,18...", "Smallest shared: LCM = 12"]]
+          }
+        },
+        questions: [
+          { q: "What is the LCM of 4 and 6?", type: "mcq", options: ["10", "12", "24", "18"], answer: "12", explain: "Multiples of 4: 4,8,12... Multiples of 6: 6,12... The smallest common one is <b>12</b>." },
+          { q: "What is the LCM of 8 and 12?", type: "mcq", options: ["16", "20", "24", "32"], answer: "24", explain: "Multiples of 8: 8,16,24... Multiples of 12: 12,24... The smallest common one is <b>24</b>." },
+          { q: "Two numbers 6 and 18 have a product of 108 and HCF of 6. What's their LCM?", type: "mcq", options: ["12", "18", "24", "36"], answer: "18", explain: "HCF × LCM = product, so LCM = 108 ÷ 6 = <b>18</b>." },
+          { q: "🧠 Brain Booster: HCF of two numbers is 4, LCM is 48. One number is 16. What's the other?", type: "mcq", options: ["8", "10", "12", "14"], answer: "12", explain: "HCF × LCM = product of numbers: 4×48=192. Other number = 192 ÷ 16 = <b>12</b>." },
+          { q: "What is the LCM of 5 and 7?", type: "mcq", options: ["12", "35", "70", "1"], answer: "35", explain: "5 and 7 are coprime (share no common factor except 1), so their LCM is simply 5 × 7 = <b>35</b>." }
+        ]
+      },
+      {
+        id: "u3l5",
+        title: "Divisibility Detective",
+        emoji: "🔎",
+        learn: {
+          intro: "Divisibility rules are quick tricks to check if a number divides exactly — no long division needed!",
+          points: [
+            "Divisible by 2: last digit is 0,2,4,6,8. Divisible by 5: last digit is 0 or 5. Divisible by 10: last digit is 0.",
+            "Divisible by 3: sum of digits is divisible by 3. Divisible by 9: sum of digits is divisible by 9.",
+            "Divisible by 4: last two digits divide by 4. Divisible by 6: divisible by BOTH 2 and 3."
+          ],
+          example: {
+            title: "Example: Is 4,344 divisible by 3?",
+            rows: [["Sum of digits: 4+3+4+4=15", "15 is divisible by 3", "So YES, 4,344 is too!"]]
+          }
+        },
+        questions: [
+          { q: "Is 4,344 divisible by 3?", type: "mcq", options: ["Yes", "No"], answer: "Yes", explain: "Sum of digits = 4+3+4+4 = 15, and 15 is divisible by 3, so <b>yes</b>." },
+          { q: "Is 5,678 divisible by 4?", type: "mcq", options: ["Yes", "No"], answer: "No", explain: "Check the last two digits: 78 ÷ 4 = 19.5, not exact — so <b>no</b>." },
+          { q: "Which of these numbers is divisible by BOTH 2 and 5?", type: "mcq", options: ["3,840", "4,845", "2,342", "3,845"], answer: "3,840", explain: "A number divisible by both 2 and 5 must end in 0. Only <b>3,840</b> ends in 0." },
+          { q: "🧠 Brain Booster: A number is divisible by 6. What two smaller numbers must it definitely also be divisible by?", type: "mcq", options: ["2 and 3", "2 and 4", "3 and 4", "2 and 5"], answer: "2 and 3", explain: "6 = 2 × 3, so any multiple of 6 is automatically a multiple of <b>2 and 3</b>." },
+          { q: "Is 72,144 divisible by 9?", type: "mcq", options: ["Yes", "No"], answer: "Yes", explain: "Sum of digits = 7+2+1+4+4 = 18, and 18 is divisible by 9, so <b>yes</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u4",
+    name: "Fraction Kitchen",
+    tagline: "Slices, shares & fraction fun",
+    emoji: "🍕",
+    color: "#FFB238",
+    lessons: [
+      {
+        id: "u4l1",
+        title: "Fraction Types & Equivalents",
+        emoji: "🍰",
+        learn: {
+          intro: "A fraction is a slice of something whole — and the same amount of pizza can be written in lots of different ways!",
+          points: [
+            "<b>Proper</b> fraction: top number smaller than bottom (2/5). <b>Improper</b>: top is bigger or equal (7/4).",
+            "<b>Mixed number</b>: a whole number + a fraction together (1¾).",
+            "<b>Equivalent fractions</b> look different but mean the same amount — multiply or divide top AND bottom by the same number."
+          ],
+          example: {
+            title: "Example: 2/3 is equivalent to...",
+            rows: [["Multiply top & bottom by 2", "2×2 / 3×2", "= 4/6"]]
+          }
+        },
+        questions: [
+          { q: "Which of these is a proper fraction?", type: "mcq", options: ["5/4", "3/3", "2/5", "7/2"], answer: "2/5", explain: "A proper fraction has a top number smaller than the bottom. Only <b>2/5</b> fits." },
+          { q: "Convert the improper fraction 17/8 into a mixed number.", type: "mcq", options: ["2 1/8", "1 7/8", "2 1/2", "1 1/8"], answer: "2 1/8", explain: "8 goes into 17 twice (16), with 1 left over: <b>2 1/8</b>." },
+          { q: "Which fraction is equivalent to 2/3?", type: "mcq", options: ["4/6", "3/5", "5/9", "4/9"], answer: "4/6", explain: "Multiply top and bottom by 2: 2×2=4, 3×2=6 → <b>4/6</b>." },
+          { q: "🧠 Brain Booster: 3/4 = ?/8 — what number goes in the blank?", type: "mcq", options: ["4", "5", "6", "7"], answer: "6", explain: "4 × 2 = 8, so multiply the top too: 3 × 2 = <b>6</b>." },
+          { q: "Convert the mixed number 2 3/5 into an improper fraction.", type: "mcq", options: ["10/5", "13/5", "11/5", "8/5"], answer: "13/5", explain: "2 × 5 = 10, plus 3 = 13. So 2 3/5 = <b>13/5</b>." }
+        ]
+      },
+      {
+        id: "u4l2",
+        title: "Comparing Fraction Slices",
+        emoji: "⚖️",
+        learn: {
+          intro: "Which slice is bigger — 3/8 of a pizza or 5/8? Comparing fractions is easy once the slices are the same size!",
+          points: [
+            "Same denominator (bottom number)? Just compare the numerators (top numbers) — bigger top wins.",
+            "Different denominators? Convert to the same denominator first (use the LCM), THEN compare tops."
+          ],
+          example: {
+            title: "Example: 2/3 vs 3/4",
+            rows: [["LCM of 3,4 = 12", "2/3 = 8/12  and  3/4 = 9/12", "9/12 > 8/12, so 3/4 is bigger"]]
+          }
+        },
+        questions: [
+          { q: "Which is bigger: 3/8 or 5/8?", type: "mcq", options: ["3/8", "5/8", "Equal"], answer: "5/8", explain: "Same denominator, so compare tops: 5 > 3, so <b>5/8</b> is bigger." },
+          { q: "Which is bigger: 2/3 or 3/4?", type: "mcq", options: ["2/3", "3/4", "Equal"], answer: "3/4", explain: "Using denominator 12: 2/3=8/12 and 3/4=9/12. Since 9>8, <b>3/4</b> is bigger." },
+          { q: "Arrange in ascending order: 1/2, 1/4, 3/4", type: "mcq", options: ["1/4 < 1/2 < 3/4", "1/2 < 1/4 < 3/4", "3/4 < 1/2 < 1/4", "1/4 < 3/4 < 1/2"], answer: "1/4 < 1/2 < 3/4", explain: "As fourths: 1/4, 2/4, 3/4 — clearly <b>1/4 < 1/2 < 3/4</b>." },
+          { q: "🧠 Brain Booster: Which is bigger: 5/6 or 7/9?", type: "mcq", options: ["5/6", "7/9", "Equal"], answer: "5/6", explain: "LCM of 6,9 is 18. 5/6=15/18 and 7/9=14/18. Since 15>14, <b>5/6</b> is bigger." },
+          { q: "Is 4/5 greater than or less than 1 whole?", type: "mcq", options: ["Greater than 1", "Less than 1", "Equal to 1"], answer: "Less than 1", explain: "4/5 has less than the full 5 parts (only 4 of 5), so it's <b>less than 1</b>." }
+        ]
+      },
+      {
+        id: "u4l3",
+        title: "Fraction Addition & Subtraction",
+        emoji: "🍕",
+        learn: {
+          intro: "Adding fraction slices is easy when they're the same size. If not — resize them first using the LCM!",
+          points: [
+            "Same denominator: add/subtract the top numbers only, keep the bottom the same.",
+            "Different denominators: find the LCM of the bottoms, convert both fractions, THEN add or subtract."
+          ],
+          example: {
+            title: "Example: 1/3 + 1/5",
+            rows: [["LCM of 3,5 = 15", "1/3=5/15  and  1/5=3/15", "5/15 + 3/15 = 8/15"]]
+          }
+        },
+        questions: [
+          { q: "1/5 + 2/5 = ?", type: "mcq", options: ["3/5", "3/10", "2/5", "1/5"], answer: "3/5", explain: "Same denominator, just add the tops: 1+2=3 → <b>3/5</b>." },
+          { q: "3/4 − 1/4 = ?", type: "mcq", options: ["2/4 (= 1/2)", "4/4", "1/4", "2/8"], answer: "2/4 (= 1/2)", explain: "Same denominator, subtract tops: 3−1=2 → 2/4, which simplifies to <b>1/2</b>." },
+          { q: "1/3 + 1/5 = ?", type: "mcq", options: ["2/8", "2/15", "8/15", "6/15"], answer: "8/15", explain: "LCM of 3,5 is 15. 1/3=5/15, 1/5=3/15. Add: 5/15+3/15 = <b>8/15</b>." },
+          { q: "🧠 Brain Booster: 3/4 − 1/6 = ?", type: "mcq", options: ["2/2", "7/12", "2/12", "4/10"], answer: "7/12", explain: "LCM of 4,6 is 12. 3/4=9/12, 1/6=2/12. Subtract: 9/12−2/12 = <b>7/12</b>." },
+          { q: "A pizza has 8 slices. You eat 3/8 and your friend eats 2/8. What fraction is LEFT?", type: "mcq", options: ["5/8", "3/8", "1/8", "6/8"], answer: "3/8", explain: "Eaten together: 3/8+2/8=5/8. Left over: 8/8−5/8 = <b>3/8</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u5",
+    name: "Decimal Detectives",
+    tagline: "Decimals, measures & temperature",
+    emoji: "🔬",
+    color: "#7A5CFF",
+    lessons: [
+      {
+        id: "u5l1",
+        title: "Decimal Operations",
+        emoji: "⚖️",
+        learn: {
+          intro: "Measurements like kg, litres and metres are often written as decimals — and you already know how to add, subtract, multiply and divide them!",
+          points: [
+            "Line up the decimal points, just like with money.",
+            "Convert to the same unit first (e.g. change 5 kg 355 g into 5.355 kg) before adding or subtracting.",
+            "Multiply or divide decimals exactly like whole numbers, then place the decimal point back in the answer."
+          ],
+          example: {
+            title: "Example: 5 kg 355 g + 3 kg 455 g",
+            rows: [["5.355 kg", "+ 3.455 kg", "= 8.810 kg"]]
+          }
+        },
+        questions: [
+          { q: "A fruit seller sold 5 kg 355 g of mangoes in the morning and 3 kg 455 g in the evening. What was the total weight sold (in kg)?", type: "mcq", options: ["8.81 kg", "8.71 kg", "9.81 kg", "8.81 g"], answer: "8.81 kg", explain: "Write both as decimals: 5.355 kg + 3.455 kg = <b>8.81 kg</b>." },
+          { q: "Sunita bought 2 l 250 ml of milk and used 850 ml for tea. How much milk is left (in litres)?", type: "mcq", options: ["1.4 l", "1.5 l", "2.1 l", "0.4 l"], answer: "1.4 l", explain: "2.250 l − 0.850 l = <b>1.4 l</b>." },
+          { q: "A ribbon 9 m 64 cm long is cut into 4 equal pieces. How long is each piece?", type: "mcq", options: ["2.31 m", "2.41 m", "2.51 m", "2.14 m"], answer: "2.41 m", explain: "9.64 m ÷ 4 = <b>2.41 m</b> for each piece." },
+          { q: "🧠 Brain Booster: 35 kg 455 g × 12 = ? (in kg)", type: "mcq", options: ["415.46 kg", "425.46 kg", "435.46 kg", "425.64 kg"], answer: "425.46 kg", explain: "35.455 kg × 12 = <b>425.46 kg</b>." },
+          { q: "168 km 8 m ÷ 4 = ? (in km)", type: "mcq", options: ["42.002 km", "42.02 km", "40.002 km", "42.2 km"], answer: "42.002 km", explain: "168.008 km ÷ 4 = <b>42.002 km</b>." }
+        ]
+      },
+      {
+        id: "u5l2",
+        title: "Temperature Trackers",
+        emoji: "🌡️",
+        learn: {
+          intro: "Temperature tells us how hot or cold something is — and different countries use different scales!",
+          points: [
+            "India uses the <b>Celsius (°C)</b> scale. The USA often uses <b>Fahrenheit (°F)</b>.",
+            "Water freezes at 0°C (32°F) and boils at 100°C (212°F).",
+            "Celsius → Fahrenheit: multiply by 9, divide by 5, then add 32.",
+            "Fahrenheit → Celsius: subtract 32, multiply by 5, then divide by 9."
+          ],
+          example: {
+            title: "Example: Convert 35°C to °F",
+            rows: [["35 × 9 = 315", "315 ÷ 5 = 63", "63 + 32 = 95°F"]]
+          }
+        },
+        questions: [
+          { q: "At what temperature does water boil, in Fahrenheit?", type: "mcq", options: ["100°F", "180°F", "212°F", "32°F"], answer: "212°F", explain: "Water boils at 100°C, which equals <b>212°F</b>." },
+          { q: "Convert 35°C to Fahrenheit.", type: "mcq", options: ["85°F", "95°F", "90°F", "63°F"], answer: "95°F", explain: "35 × 9 ÷ 5 + 32 = 63 + 32 = <b>95°F</b>." },
+          { q: "A cup of hot milk is 149°F. What is this in Celsius?", type: "mcq", options: ["55°C", "60°C", "65°C", "70°C"], answer: "65°C", explain: "(149 − 32) × 5 ÷ 9 = 117 × 5 ÷ 9 = <b>65°C</b>." },
+          { q: "🧠 Brain Booster: 4 l 455 ml − 3 l 695 ml = ? (as a decimal in litres)", type: "mcq", options: ["0.66 l", "0.76 l", "0.86 l", "1.76 l"], answer: "0.76 l", explain: "4.455 l − 3.695 l = <b>0.76 l</b>." },
+          { q: "Which temperature is coldest?", type: "mcq", options: ["25°C", "50°F", "0°C", "40°F"], answer: "0°C", explain: "0°C = 32°F, which is colder than 25°C (77°F), 50°F, and 40°F." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u6",
+    name: "Geometry Explorers",
+    tagline: "Angles, triangles, quadrilaterals & circles",
+    emoji: "📐",
+    color: "#3FA34D",
+    lessons: [
+      {
+        id: "u6l1",
+        title: "Angles & Lines",
+        emoji: "📏",
+        learn: {
+          intro: "An angle is the space between two lines meeting at a point — and every angle has a name based on its size!",
+          points: [
+            "<b>Acute</b> angle: between 0° and 90° (small). <b>Right</b> angle: exactly 90°.",
+            "<b>Obtuse</b> angle: between 90° and 180°. <b>Straight</b> angle: exactly 180°.",
+            "Two lines that cross and make a right angle are <b>perpendicular</b>.",
+            "Two lines that never meet, no matter how far they extend, are <b>parallel</b>."
+          ],
+          example: {
+            title: "Example",
+            rows: [["45° → acute", "90° → right", "135° → obtuse"]]
+          }
+        },
+        questions: [
+          { q: "An angle measures 45°. What type of angle is it?", type: "mcq", options: ["Acute", "Right", "Obtuse", "Straight"], answer: "Acute", explain: "45° is less than 90°, so it's an <b>acute</b> angle." },
+          { q: "An angle measures exactly 90°. What is it called?", type: "mcq", options: ["Acute angle", "Right angle", "Obtuse angle", "Zero angle"], answer: "Right angle", explain: "An angle of exactly 90° is a <b>right angle</b>." },
+          { q: "An angle measures 135°. What type is it?", type: "mcq", options: ["Acute", "Right", "Obtuse", "Reflex"], answer: "Obtuse", explain: "135° is between 90° and 180°, so it's <b>obtuse</b>." },
+          { q: "Two lines meet and form a right angle. What are these lines called?", type: "mcq", options: ["Parallel", "Perpendicular", "Intersecting only", "Curved"], answer: "Perpendicular", explain: "Lines that meet at exactly 90° are called <b>perpendicular</b> lines." },
+          { q: "🧠 Brain Booster: Two lines never meet, even when extended forever. What are they called?", type: "mcq", options: ["Perpendicular", "Intersecting", "Parallel", "Diagonal"], answer: "Parallel", explain: "Lines that stay the same distance apart forever and never cross are <b>parallel</b> lines." }
+        ]
+      },
+      {
+        id: "u6l2",
+        title: "Triangles, Quadrilaterals & Circles",
+        emoji: "🔺",
+        learn: {
+          intro: "Shapes are named by their sides and angles — once you know the clues, you can identify any shape!",
+          points: [
+            "<b>Equilateral</b> triangle: all 3 sides equal. <b>Isosceles</b>: 2 sides equal. <b>Scalene</b>: no sides equal.",
+            "A <b>square</b> has 4 equal sides and 4 right angles. A <b>rectangle</b> has opposite sides equal and 4 right angles.",
+            "In a circle, the distance from the centre to any point on the edge is the <b>radius</b>. Across the whole circle through the centre is the <b>diameter</b> (2 × radius).",
+            "The angles inside any triangle always add up to <b>180°</b>."
+          ]
+        },
+        questions: [
+          { q: "A triangle has all 3 sides equal. What is it called?", type: "mcq", options: ["Equilateral", "Isosceles", "Scalene", "Right-angled"], answer: "Equilateral", explain: "A triangle with all sides equal is called <b>equilateral</b> — all its angles are also equal (60° each)." },
+          { q: "A triangle has 2 equal sides. What is it called?", type: "mcq", options: ["Equilateral", "Isosceles", "Scalene", "Obtuse"], answer: "Isosceles", explain: "A triangle with exactly 2 equal sides is called <b>isosceles</b>." },
+          { q: "A quadrilateral has all sides equal and all angles 90°. What is it?", type: "mcq", options: ["Rectangle", "Rhombus", "Square", "Trapezium"], answer: "Square", explain: "Equal sides AND right angles together make a <b>square</b> (a rhombus has equal sides but not always right angles)." },
+          { q: "The distance from the centre of a circle to any point on it is called the ______.", type: "mcq", options: ["diameter", "radius", "circumference", "chord"], answer: "radius", explain: "The <b>radius</b> is the distance from the centre to the edge. The diameter is twice the radius." },
+          { q: "🧠 Brain Booster: A triangle has angles 90°, 45°, and 45°. What do these three angles add up to?", type: "mcq", options: ["90°", "180°", "270°", "360°"], answer: "180°", explain: "The three angles of ANY triangle always add up to <b>180°</b> (90+45+45=180)." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u7",
+    name: "Area & Volume Builders",
+    tagline: "Covering surfaces & filling spaces",
+    emoji: "📦",
+    color: "#4FB0E8",
+    lessons: [
+      {
+        id: "u7l1",
+        title: "Area Word Problems",
+        emoji: "🧱",
+        learn: {
+          intro: "Area tells us how much flat space something covers — like a carpet on a floor or paint on a wall.",
+          points: [
+            "Area of a rectangle = length × breadth.",
+            "Area of a square = side × side.",
+            "Always check that length and breadth are in the SAME unit before multiplying!"
+          ],
+          example: {
+            title: "Example: Room 5.5 m long, 3.5 m broad",
+            rows: [["Area = length × breadth", "= 5.5 × 3.5", "= 19.25 sq m"]]
+          }
+        },
+        questions: [
+          { q: "A rectangular carpet is 10 m long and 3 m broad. What is its area?", type: "mcq", options: ["13 sq m", "30 sq m", "26 sq m", "30 m"], answer: "30 sq m", explain: "Area = length × breadth = 10 × 3 = <b>30 sq m</b>." },
+          { q: "A square park has a side of 100 m. What is its area?", type: "mcq", options: ["400 sq m", "1,000 sq m", "10,000 sq m", "200 sq m"], answer: "10,000 sq m", explain: "Area of square = side × side = 100 × 100 = <b>10,000 sq m</b>." },
+          { q: "Rohit and Kamal play in a room 5.5 m long and 3.5 m broad. What is the area of the room?", type: "mcq", options: ["19.25 sq m", "18.25 sq m", "9 sq m", "19.25 m"], answer: "19.25 sq m", explain: "Area = 5.5 × 3.5 = <b>19.25 sq m</b>." },
+          { q: "🧠 Brain Booster: A rectangle's area is 60 sq cm. Its length is 12 cm. What is its breadth?", type: "mcq", options: ["4 cm", "5 cm", "6 cm", "48 cm"], answer: "5 cm", explain: "Breadth = Area ÷ Length = 60 ÷ 12 = <b>5 cm</b>." },
+          { q: "The base of a rectangular tank is 21.5 m long and 10 m broad. What is its area?", type: "mcq", options: ["205 sq m", "215 sq m", "31.5 sq m", "225 sq m"], answer: "215 sq m", explain: "Area = 21.5 × 10 = <b>215 sq m</b>." }
+        ]
+      },
+      {
+        id: "u7l2",
+        title: "Volume Word Problems",
+        emoji: "🧊",
+        learn: {
+          intro: "Volume tells us how much space fits inside a solid — like water inside a tank or toys inside a box.",
+          points: [
+            "Volume of a cube = side × side × side.",
+            "Volume of a cuboid = length × breadth × height.",
+            "Volume is measured in cubic units, like cu. cm or cu. m."
+          ],
+          example: {
+            title: "Example: Cuboid 5×3×2 cm",
+            rows: [["Volume = l × b × h", "= 5 × 3 × 2", "= 30 cu cm"]]
+          }
+        },
+        questions: [
+          { q: "A cube has each edge 2 cm. What is its volume?", type: "mcq", options: ["6 cu cm", "8 cu cm", "4 cu cm", "12 cu cm"], answer: "8 cu cm", explain: "Volume of cube = side³ = 2×2×2 = <b>8 cu cm</b>." },
+          { q: "A cuboid has length 5 cm, breadth 3 cm, height 2 cm. What is its volume?", type: "mcq", options: ["10 cu cm", "20 cu cm", "30 cu cm", "15 cu cm"], answer: "30 cu cm", explain: "Volume = l × b × h = 5 × 3 × 2 = <b>30 cu cm</b>." },
+          { q: "Rahul makes a cuboid of length 5 cm, breadth 1 cm, height 2 cm. What is its volume?", type: "mcq", options: ["8 cu cm", "10 cu cm", "12 cu cm", "7 cu cm"], answer: "10 cu cm", explain: "Volume = 5 × 1 × 2 = <b>10 cu cm</b>." },
+          { q: "🧠 Brain Booster: A box is 10 cm × 10 cm × 10 cm (volume 1000 cu cm). If you DOUBLE only the length, what is the new volume?", type: "mcq", options: ["1,000 cu cm", "1,500 cu cm", "2,000 cu cm", "4,000 cu cm"], answer: "2,000 cu cm", explain: "New volume = 20 × 10 × 10 = <b>2,000 cu cm</b> — doubling one side doubles the volume." },
+          { q: "A swimming pool is 20 m long, 15 m broad, 2 m deep. What is its volume?", type: "mcq", options: ["300 cu m", "600 cu m", "37 cu m", "150 cu m"], answer: "600 cu m", explain: "Volume = 20 × 15 × 2 = <b>600 cu m</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u8",
+    name: "Percentage Power",
+    tagline: "\"Out of 100\" for everyday life",
+    emoji: "💯",
+    color: "#FF7A5C",
+    lessons: [
+      {
+        id: "u8l1",
+        title: "Percent Basics",
+        emoji: "🔢",
+        learn: {
+          intro: "\"Per cent\" means \"out of 100\" — it's just a special kind of fraction!",
+          points: [
+            "To change a fraction to a percentage: multiply by 100.",
+            "To change a decimal to a percentage: multiply by 100 (shift the dot 2 places right).",
+            "To change a percentage to a fraction: write it over 100, then simplify."
+          ],
+          example: {
+            title: "Example",
+            rows: [["1/5 × 100 = 20%", "0.4 × 100 = 40%", "45% = 45/100 = 9/20"]]
+          }
+        },
+        questions: [
+          { q: "What does 'per cent' mean?", type: "mcq", options: ["Out of 10", "Out of 100", "Out of 1000", "A whole number"], answer: "Out of 100", explain: "'Per cent' comes from 'per centum', meaning <b>out of 100</b>." },
+          { q: "Write 1/5 as a percentage.", type: "mcq", options: ["15%", "20%", "25%", "5%"], answer: "20%", explain: "1/5 × 100% = <b>20%</b>." },
+          { q: "Write 45% as a fraction in simplest form.", type: "mcq", options: ["45/10", "9/20", "4/5", "45/1000"], answer: "9/20", explain: "45% = 45/100. Dividing top and bottom by 5 gives <b>9/20</b>." },
+          { q: "Write 0.4 as a percentage.", type: "mcq", options: ["0.4%", "4%", "40%", "400%"], answer: "40%", explain: "0.4 × 100 = <b>40%</b> (just move the decimal point 2 places right)." },
+          { q: "🧠 Brain Booster: Which is greater: 1/2 or 45%?", type: "mcq", options: ["1/2", "45%", "They're equal"], answer: "1/2", explain: "1/2 = 50%, which is greater than <b>45%</b>." }
+        ]
+      },
+      {
+        id: "u8l2",
+        title: "Percentage Word Problems",
+        emoji: "🎯",
+        learn: {
+          intro: "To find a percentage OF a number, write the percentage as a fraction over 100, then multiply.",
+          points: [
+            "Percentage of a number = (percentage ÷ 100) × number.",
+            "This is used everywhere: marks, discounts, attendance, and more!"
+          ],
+          example: {
+            title: "Example: 25% of 60",
+            rows: [["25/100 × 60", "= 1500/100", "= 15"]]
+          }
+        },
+        questions: [
+          { q: "Rohit scored 25% in a test out of 60 marks. How many marks did he get?", type: "mcq", options: ["10", "12", "15", "20"], answer: "15", explain: "25% of 60 = 25/100 × 60 = <b>15</b>." },
+          { q: "Peter scored 75% out of 40 marks in History. How many marks did he get?", type: "mcq", options: ["25", "28", "30", "35"], answer: "30", explain: "75% of 40 = 75/100 × 40 = <b>30</b>." },
+          { q: "Find 10% of ₹500.", type: "mcq", options: ["₹5", "₹50", "₹100", "₹500"], answer: "₹50", explain: "10% of 500 = 10/100 × 500 = <b>₹50</b>." },
+          { q: "🧠 Brain Booster: A school has 220 working days in a year. Gopal was absent for 22 days. What percentage of days was he absent?", type: "mcq", options: ["5%", "8%", "10%", "12%"], answer: "10%", explain: "22/220 × 100% = <b>10%</b>." },
+          { q: "30% of the students in a class of 50 play hockey. How many students play hockey?", type: "mcq", options: ["10", "12", "15", "20"], answer: "15", explain: "30% of 50 = 30/100 × 50 = <b>15</b> students." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u9",
+    name: "Money Matters",
+    tagline: "Bills, profit & loss",
+    emoji: "💰",
+    color: "#FFB238",
+    lessons: [
+      {
+        id: "u9l1",
+        title: "Money Operations",
+        emoji: "🧾",
+        learn: {
+          intro: "Money math is just decimal math with a ₹ sign — add, subtract, multiply and divide exactly the same way!",
+          points: [
+            "₹1 = 100 paise. Always keep 2 digits after the decimal point for rupees.",
+            "For the unitary method: find the cost of ONE item first, then multiply for however many you need."
+          ],
+          example: {
+            title: "Example: 13 pencils cost ₹48.75. Find cost of 10.",
+            rows: [["Cost of 1 pencil = 48.75 ÷ 13 = ₹3.75", "Cost of 10 pencils = 3.75 × 10", "= ₹37.50"]]
+          }
+        },
+        questions: [
+          { q: "Add ₹58.25, ₹9.50 and ₹1.95.", type: "mcq", options: ["₹68.70", "₹69.70", "₹70.70", "₹69.60"], answer: "₹69.70", explain: "58.25 + 9.50 + 1.95 = <b>₹69.70</b>." },
+          { q: "Subtract ₹17.90 from ₹80.", type: "mcq", options: ["₹62.10", "₹63.10", "₹61.10", "₹62.90"], answer: "₹62.10", explain: "80.00 − 17.90 = <b>₹62.10</b>." },
+          { q: "The cost of 13 pencils is ₹48.75. Find the cost of 10 pencils.", type: "mcq", options: ["₹35.50", "₹36.50", "₹37.50", "₹38.50"], answer: "₹37.50", explain: "Cost of 1 pencil = 48.75 ÷ 13 = ₹3.75. Cost of 10 = 3.75 × 10 = <b>₹37.50</b>." },
+          { q: "🧠 Brain Booster: A pillow costs ₹175.75. A school buys 18 pillows. What's the total cost?", type: "mcq", options: ["₹3,063.50", "₹3,163.50", "₹3,263.50", "₹3,153.50"], answer: "₹3,163.50", explain: "175.75 × 18 = <b>₹3,163.50</b>." },
+          { q: "9 chocolates cost ₹899.10. What is the cost of ONE chocolate?", type: "mcq", options: ["₹89.90", "₹99.90", "₹98.90", "₹100.90"], answer: "₹99.90", explain: "899.10 ÷ 9 = <b>₹99.90</b>." }
+        ]
+      },
+      {
+        id: "u9l2",
+        title: "Profit, Loss & Bills",
+        emoji: "🏪",
+        learn: {
+          intro: "Shopkeepers buy things at a cost price (CP) and sell at a selling price (SP) — the difference is profit or loss!",
+          points: [
+            "If SP > CP, there's a <b>Profit</b> = SP − CP.",
+            "If SP < CP, there's a <b>Loss</b> = CP − SP.",
+            "Profit % = (Profit ÷ CP) × 100. Loss % = (Loss ÷ CP) × 100."
+          ],
+          example: {
+            title: "Example: Bought for ₹4000, sold for ₹5000",
+            rows: [["SP > CP, so it's a profit", "Profit = 5000 − 4000", "= ₹1000"]]
+          }
+        },
+        questions: [
+          { q: "A shopkeeper buys a sofa for ₹4000 and sells it for ₹5000. Is this a profit or loss, and how much?", type: "mcq", options: ["Profit of ₹1000", "Loss of ₹1000", "Profit of ₹9000", "No profit no loss"], answer: "Profit of ₹1000", explain: "SP (5000) > CP (4000), so Profit = 5000 − 4000 = <b>₹1000</b>." },
+          { q: "Cost price of a basket of mangoes is ₹220, sold for ₹180. Find the loss.", type: "mcq", options: ["₹30", "₹40", "₹50", "₹400"], answer: "₹40", explain: "CP (220) > SP (180), so Loss = 220 − 180 = <b>₹40</b>." },
+          { q: "A book's cost price is ₹450, sold for ₹495. Find the profit percentage.", type: "mcq", options: ["5%", "8%", "10%", "12%"], answer: "10%", explain: "Profit = 495−450=45. Profit% = (45÷450)×100 = <b>10%</b>." },
+          { q: "🧠 Brain Booster: A cellphone bought for ₹3800, sold for ₹3420. Find the loss percentage.", type: "mcq", options: ["8%", "10%", "12%", "15%"], answer: "10%", explain: "Loss = 3800−3420=380. Loss% = (380÷3800)×100 = <b>10%</b>." },
+          { q: "Rice costs ₹50 per kg. What is the cost of 5 kg?", type: "mcq", options: ["₹200", "₹225", "₹250", "₹275"], answer: "₹250", explain: "5 × ₹50 = <b>₹250</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u10",
+    name: "Time Travellers",
+    tagline: "Clocks, calendars & timetables",
+    emoji: "⏰",
+    color: "#7A5CFF",
+    lessons: [
+      {
+        id: "u10l1",
+        title: "Time Conversions & Arithmetic",
+        emoji: "🕰️",
+        learn: {
+          intro: "Time is measured in a special way — everything is grouped in 60s (and 24 for a day)!",
+          points: [
+            "60 seconds = 1 minute. 60 minutes = 1 hour. 24 hours = 1 day.",
+            "When adding time, regroup at 60 (not 10!) — 85 minutes = 1 hour 25 minutes.",
+            "12 months = 1 year."
+          ],
+          example: {
+            title: "Example: 5 h 40 min + 8 h 45 min",
+            rows: [["Minutes: 40+45=85 → 1h 25min", "Hours: 5+8=13, plus the extra 1h = 14", "Total = 14 h 25 min"]]
+          }
+        },
+        questions: [
+          { q: "Convert 3 minutes into seconds.", type: "mcq", options: ["60", "120", "180", "300"], answer: "180", explain: "3 × 60 = <b>180 seconds</b>." },
+          { q: "How many minutes are in 4 hours?", type: "mcq", options: ["120", "180", "240", "260"], answer: "240", explain: "4 × 60 = <b>240 minutes</b>." },
+          { q: "Add 5 h 40 min and 8 h 45 min.", type: "mcq", options: ["13 h 25 min", "14 h 25 min", "13 h 85 min", "14 h 15 min"], answer: "14 h 25 min", explain: "40+45=85 min = 1h 25min. 5+8+1 = 14 h. Total = <b>14 h 25 min</b>." },
+          { q: "🧠 Brain Booster: A flight left Delhi at 10:25 a.m. and reached Meerut after 2 hours 45 minutes. What time did it land?", type: "mcq", options: ["12:50 p.m.", "1:10 p.m.", "1:00 p.m.", "12:10 p.m."], answer: "1:10 p.m.", explain: "10:25 + 2:45 → minutes: 25+45=70=1h10min → 10+2+1=13 h = 1 p.m. → <b>1:10 p.m.</b>." },
+          { q: "Convert 2 years 6 months into months.", type: "mcq", options: ["24 months", "26 months", "28 months", "30 months"], answer: "30 months", explain: "2 years = 24 months. 24 + 6 = <b>30 months</b>." }
+        ]
+      },
+      {
+        id: "u10l2",
+        title: "Time Word Problems",
+        emoji: "🚆",
+        learn: {
+          intro: "Real life is full of time puzzles — trains, movies, and races all need time maths!",
+          points: [
+            "To find how long something took: subtract start time from end time (regroup at 60 if needed).",
+            "To compare two durations, convert both to the same units (like minutes) first."
+          ]
+        },
+        questions: [
+          { q: "A train left a station at 11:15 a.m. and reached the next station at 2:35 p.m. How long was the journey?", type: "mcq", options: ["3 h 10 min", "3 h 20 min", "3 h 30 min", "2 h 20 min"], answer: "3 h 20 min", explain: "From 11:15 a.m. to 2:35 p.m. is <b>3 h 20 min</b>." },
+          { q: "Anant took 2 h 35 min and Sudhir took 2 h 42 min to run a marathon. Who was faster, and by how much?", type: "mcq", options: ["Anant, by 7 min", "Sudhir, by 7 min", "Anant, by 17 min", "They tied"], answer: "Anant, by 7 min", explain: "2h42min − 2h35min = <b>7 minutes</b>, so Anant was faster." },
+          { q: "A flight from Delhi to Dubai took 2 h 52 min, and Dubai to Delhi took 3 h 24 min. What was the total flying time?", type: "mcq", options: ["6 h 6 min", "6 h 16 min", "6 h 26 min", "5 h 76 min"], answer: "6 h 16 min", explain: "52+24=76 min = 1h16min. 2+3+1 = 6h. Total = <b>6 h 16 min</b>." },
+          { q: "🧠 Brain Booster: 60 minutes = 1 hour. How many hours are in 300 minutes?", type: "mcq", options: ["4 hours", "5 hours", "6 hours", "50 hours"], answer: "5 hours", explain: "300 ÷ 60 = <b>5 hours</b>." },
+          { q: "A movie started at 6:15 p.m. and ended at 8:20 p.m. How long was the movie?", type: "mcq", options: ["2 h", "2 h 5 min", "2 h 15 min", "1 h 55 min"], answer: "2 h 5 min", explain: "From 6:15 to 8:20 p.m. is <b>2 h 5 min</b>." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u11",
+    name: "Graph Gurus",
+    tagline: "Pictographs, bars, circles & lines",
+    emoji: "📊",
+    color: "#4FB0E8",
+    lessons: [
+      {
+        id: "u11l1",
+        title: "Reading Graphs",
+        emoji: "📈",
+        learn: {
+          intro: "Graphs turn a big list of numbers into a picture you can understand in seconds!",
+          points: [
+            "A <b>pictograph</b> uses pictures/symbols where 1 picture = a fixed number of things.",
+            "A <b>bar graph</b> uses bars — taller bars mean bigger numbers.",
+            "A <b>circle graph (pie chart)</b> shows how a whole is split into parts — the whole circle = the total (100%).",
+            "A <b>line graph</b> shows how something changes over time — an upward line means it's increasing."
+          ]
+        },
+        questions: [
+          { q: "In a bar graph, what does the height of each bar usually show?", type: "mcq", options: ["The color of the item", "The value or quantity it represents", "The name of the item", "Nothing important"], answer: "The value or quantity it represents", explain: "Taller bars = bigger values. That's how we compare data quickly in a <b>bar graph</b>." },
+          { q: "A pictograph uses pictures where 1 picture = 5 children. If a row has 3 pictures, how many children does it represent?", type: "mcq", options: ["3", "5", "8", "15"], answer: "15", explain: "3 pictures × 5 children each = <b>15 children</b>." },
+          { q: "In a circle graph (pie chart), what does the WHOLE circle represent?", type: "mcq", options: ["Zero", "Half the data", "The total (100%) of the data", "Just one category"], answer: "The total (100%) of the data", explain: "The full circle always represents the <b>whole (100%)</b> — each slice is a part of that whole." },
+          { q: "🧠 Brain Booster: In a survey of 144 people, 40 liked samosa best. What fraction of the total liked samosa?", type: "mcq", options: ["2/9", "5/18", "1/4", "4/9"], answer: "5/18", explain: "40/144 simplifies (divide by 8) to <b>5/18</b>." },
+          { q: "A line graph shows a plant's height increasing every week. What does an upward-sloping line mean?", type: "mcq", options: ["The value is decreasing", "The value is increasing", "The value stays the same", "There's no data"], answer: "The value is increasing", explain: "When a line graph slopes UP, the value is <b>increasing</b> over time." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u12",
+    name: "Symmetry & Map Masters",
+    tagline: "Mirrors, patterns, nets & maps",
+    emoji: "🗺️",
+    color: "#FF7A5C",
+    lessons: [
+      {
+        id: "u12l1",
+        title: "Symmetry & Patterns",
+        emoji: "🦋",
+        learn: {
+          intro: "Symmetry is all around us — in butterflies, buildings, and even letters of the alphabet!",
+          points: [
+            "If a shape looks exactly the same on both sides of a line, that line is a <b>line of symmetry</b>.",
+            "Number patterns follow a rule — spotting the rule helps you predict the next number.",
+            "Triangular numbers (1,3,6,10...) and square numbers (1,4,9,16...) are special patterns made from dots."
+          ]
+        },
+        questions: [
+          { q: "A shape looks exactly the same on both sides of a line. What is this line called?", type: "mcq", options: ["Diagonal", "Line of symmetry", "Radius", "Diameter"], answer: "Line of symmetry", explain: "That special line is called a <b>line of symmetry</b> — like a mirror down the middle." },
+          { q: "The letter 'A' has how many lines of symmetry?", type: "mcq", options: ["0", "1", "2", "4"], answer: "1", explain: "'A' can be split top-to-bottom into two mirror halves — it has exactly <b>1</b> line of symmetry." },
+          { q: "In the pattern 1, 3, 6, 10, 15... each number is called a ______ number.", type: "mcq", options: ["square", "triangular", "prime", "even"], answer: "triangular", explain: "These are <b>triangular numbers</b> — they can be arranged as dots in a triangle shape." },
+          { q: "In the pattern 1, 4, 9, 16, 25... these are called ______ numbers.", type: "mcq", options: ["triangular", "square", "cube", "odd"], answer: "square", explain: "These are <b>square numbers</b> — each one is a whole number multiplied by itself (1×1, 2×2, 3×3...)." },
+          { q: "🧠 Brain Booster: A square is rotated by a quarter turn (90°). Does it look the same or different?", type: "mcq", options: ["The same", "Different", "It disappears"], answer: "The same", explain: "A square has 4 equal sides and angles, so turning it 90° makes it look exactly <b>the same</b>." }
+        ]
+      },
+      {
+        id: "u12l2",
+        title: "Nets & Maps",
+        emoji: "🧭",
+        learn: {
+          intro: "A net shows you how to 'unfold' a 3-D shape flat — and a map shows you the world shrunk down to fit on paper!",
+          points: [
+            "A flat shape that folds up into a solid 3-D shape is called a <b>net</b>.",
+            "A cube has 6 square faces.",
+            "A map's <b>scale</b> tells you how much smaller it is than real life, e.g. '1 cm = 20 km'."
+          ],
+          example: {
+            title: "Example: Scale 1 cm = 20 km",
+            rows: [["3 cm on the map", "3 × 20 km", "= 60 km in real life"]]
+          }
+        },
+        questions: [
+          { q: "A flat shape that folds up into a 3-D solid is called a ______.", type: "mcq", options: ["map", "net", "grid", "scale"], answer: "net", explain: "That flat, foldable pattern is called a <b>net</b>." },
+          { q: "A cube has how many faces?", type: "mcq", options: ["4", "6", "8", "12"], answer: "6", explain: "A cube has <b>6</b> square faces — think of a dice!" },
+          { q: "On a map, the scale is 1 cm = 20 km. How many real km does 3 cm represent?", type: "mcq", options: ["23 km", "40 km", "60 km", "63 km"], answer: "60 km", explain: "3 × 20 km = <b>60 km</b>." },
+          { q: "🧠 Brain Booster: On a map, scale is 1 cm = 100 km. Two cities are 6 cm apart on the map. What's the real distance?", type: "mcq", options: ["106 km", "500 km", "600 km", "60 km"], answer: "600 km", explain: "6 × 100 km = <b>600 km</b>." },
+          { q: "A map is a ______ drawing of a real place, viewed from above.", type: "mcq", options: ["life-sized", "flat, shrunk-down", "3-dimensional", "random"], answer: "flat, shrunk-down", explain: "A map is always a <b>flat, shrunk-down</b> (reduced) drawing viewed from directly above." }
+        ]
+      }
+    ]
+  },
+  {
+    id: "u13",
+    name: "Algebra Explorers",
+    tagline: "Letters that stand for numbers",
+    emoji: "🔤",
+    color: "#2F3C7E",
+    lessons: [
+      {
+        id: "u13l1",
+        title: "Expressions & Variables",
+        emoji: "🧩",
+        learn: {
+          intro: "Algebra uses letters to stand for mystery numbers — it's like a secret code for maths!",
+          points: [
+            "A letter that can stand for different numbers is called a <b>variable</b> (like x or y).",
+            "A fixed number that never changes is called a <b>constant</b>.",
+            "The number multiplied with a variable is its <b>coefficient</b> — in 5y, the coefficient is 5."
+          ],
+          example: {
+            title: "Example: If a=2, b=3, find a+4b",
+            rows: [["a + 4b", "= 2 + 4×3", "= 2 + 12 = 14"]]
+          }
+        },
+        questions: [
+          { q: "In algebra, a letter that can stand for different numbers is called a ______.", type: "mcq", options: ["constant", "variable", "coefficient", "term"], answer: "variable", explain: "A letter whose value can change is called a <b>variable</b>." },
+          { q: "In the expression 5y, what is the coefficient of y?", type: "mcq", options: ["y", "1", "5", "5y"], answer: "5", explain: "The number attached to a variable is its <b>coefficient</b> — here it's <b>5</b>." },
+          { q: "Write 'a number x increased by 7' as an algebraic expression.", type: "mcq", options: ["7x", "x − 7", "x + 7", "7 − x"], answer: "x + 7", explain: "'Increased by' means add: <b>x + 7</b>." },
+          { q: "🧠 Brain Booster: If a=2 and b=3, find the value of a + 4b.", type: "mcq", options: ["9", "11", "14", "20"], answer: "14", explain: "a + 4b = 2 + (4×3) = 2 + 12 = <b>14</b>." },
+          { q: "Simplify: 3a + 5a.", type: "mcq", options: ["8", "8a", "15a", "2a"], answer: "8a", explain: "Same variable (like terms), so add coefficients: 3+5=8 → <b>8a</b>." }
+        ]
+      },
+      {
+        id: "u13l2",
+        title: "Simplifying Expressions",
+        emoji: "✂️",
+        learn: {
+          intro: "Simplifying means combining 'like terms' — terms that have the exact same letters — to make an expression shorter.",
+          points: [
+            "Only combine terms with the SAME variable(s): 3a and 5a can combine, but 3a and 5b cannot.",
+            "Add or subtract just the coefficients, and keep the variable the same."
+          ],
+          example: {
+            title: "Example: Simplify 3a + 5b + 6a + 2b",
+            rows: [["Group like terms: (3a+6a) + (5b+2b)", "= 9a + 7b", "That's as simple as it gets!"]]
+          }
+        },
+        questions: [
+          { q: "Simplify: 7x − 2x.", type: "mcq", options: ["5", "5x", "9x", "14x"], answer: "5x", explain: "7−2=5, keep the variable: <b>5x</b>." },
+          { q: "Are 3xy and 9yx LIKE terms?", type: "mcq", options: ["Yes", "No"], answer: "Yes", explain: "xy and yx use the exact same variables (order doesn't matter), so <b>yes</b>, they're like terms." },
+          { q: "Simplify: 3a + 5b + 6a + 2b.", type: "mcq", options: ["9a + 7b", "8a + 8b", "9a + 2b", "16ab"], answer: "9a + 7b", explain: "Group: (3a+6a)=9a, (5b+2b)=7b → <b>9a + 7b</b>." },
+          { q: "🧠 Brain Booster: If x=4, find the value of 2x + 3x.", type: "mcq", options: ["9", "14", "20", "24"], answer: "20", explain: "2x+3x = 5x. When x=4: 5×4 = <b>20</b>." },
+          { q: "Simplify: 8pq + 3qp − 2pq.", type: "mcq", options: ["7pq", "9pq", "11pq", "5pq"], answer: "9pq", explain: "pq and qp are like terms. (8+3−2)pq = <b>9pq</b>." }
+        ]
+      }
+    ]
+  }
+];
+
+if (typeof window !== "undefined") window.UNITS = UNITS;
+
+</script>
+<script>
+/* ==========================================================================
+   JUNGLE MATH QUEST — random question generators
+   One generator per unit for infinite "long-term memory" practice.
+   Each generator returns { q, options, answer, explain } (MCQ, 4 options).
+   ========================================================================== */
+
+function rint(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function fmt(n) { return typeof n === "number" ? n.toLocaleString("en-IN") : n; }
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function lcmOf(a, b) { return (a * b) / gcd(a, b); }
+
+// Build 4 shuffled MCQ options (correct + up to 3 unique numeric distractors)
+function buildNumericOptions(correct, distractorFn) {
+  const set = new Set([correct]);
+  let guard = 0;
+  while (set.size < 4 && guard < 30) {
+    guard++;
+    const d = distractorFn();
+    if (d !== correct && d >= 0) set.add(d);
+  }
+  const opts = Array.from(set).slice(0, 4);
+  while (opts.length < 4) opts.push(correct + opts.length * 3 + 1);
+  for (let i = opts.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [opts[i], opts[j]] = [opts[j], opts[i]];
+  }
+  return opts.map(fmt);
+}
+
+const GENERATORS = {
+  // ---- Unit 1: Large Numbers ----
+  u1: function () {
+    const digits = [rint(1, 9), rint(0, 9), rint(0, 9), rint(0, 9), rint(0, 9), rint(0, 9)];
+    const num = Number(digits.join(""));
+    const places = [
+      { name: "ones", mult: 1 }, { name: "tens", mult: 10 }, { name: "hundreds", mult: 100 },
+      { name: "thousands", mult: 1000 }, { name: "ten thousands", mult: 10000 }, { name: "lakhs", mult: 100000 }
+    ];
+    const idx = rint(0, 5); // from right
+    const digit = digits[5 - idx];
+    const place = places[idx];
+    const correct = digit * place.mult;
+    const options = buildNumericOptions(correct, () => pick([correct * 10, Math.floor(correct / 10) || correct + 5, correct + place.mult, correct - place.mult >= 0 ? correct - place.mult : correct + place.mult * 2]));
+    return {
+      q: `In the number <b>${fmt(num)}</b>, what is the place value of the digit in the ${place.name} place (that digit is ${digit})?`,
+      options, answer: fmt(correct),
+      explain: `The digit ${digit} is in the <b>${place.name}</b> place, so its value = ${digit} × ${fmt(place.mult)} = <b>${fmt(correct)}</b>.`
+    };
+  },
+  // ---- Unit 2: Operations ----
+  u2: function () {
+    const type = pick(["add", "sub", "mul", "div"]);
+    if (type === "add") {
+      const a = rint(1000, 90000), b = rint(1000, 90000);
+      const correct = a + b;
+      return { q: `A shop sold ${fmt(a)} masks in week 1 and ${fmt(b)} in week 2. How many masks in total?`, options: buildNumericOptions(correct, () => correct + pick([-100, 100, -1000, 1000, 10])), answer: fmt(correct), explain: `${fmt(a)} + ${fmt(b)} = <b>${fmt(correct)}</b>.` };
+    }
+    if (type === "sub") {
+      const a = rint(50000, 99000), b = rint(1000, 49000);
+      const correct = a - b;
+      return { q: `A stadium had ${fmt(a)} seats. ${fmt(b)} tickets were sold. How many seats are still empty?`, options: buildNumericOptions(correct, () => correct + pick([-100, 100, -1000, 1000, 10])), answer: fmt(correct), explain: `${fmt(a)} − ${fmt(b)} = <b>${fmt(correct)}</b>.` };
+    }
+    if (type === "mul") {
+      const a = rint(12, 99), b = rint(3, 12);
+      const correct = a * b;
+      return { q: `A box holds ${a} sweets. How many sweets are in ${b} such boxes?`, options: buildNumericOptions(correct, () => correct + pick([-a, a, -b, b, 2])), answer: fmt(correct), explain: `${a} × ${b} = <b>${fmt(correct)}</b>.` };
+    }
+    // div (ensure exact)
+    const b = rint(3, 12);
+    const correct = rint(5, 40);
+    const a = b * correct;
+    return { q: `${fmt(a)} sweets are shared equally among ${b} children. How many sweets does each child get?`, options: buildNumericOptions(correct, () => correct + pick([-2, 2, -1, 1, 3])), answer: fmt(correct), explain: `${fmt(a)} ÷ ${b} = <b>${correct}</b>.` };
+  },
+  // ---- Unit 3: Factors & Multiples ----
+  u3: function () {
+    const type = pick(["hcf", "lcm"]);
+    const a = rint(4, 30), b = rint(4, 30);
+    if (type === "hcf") {
+      const correct = gcd(a, b);
+      return { q: `What is the HCF of ${a} and ${b}?`, options: buildNumericOptions(correct, () => correct + pick([-1, 1, -2, 2, 3])), answer: fmt(correct), explain: `The biggest number that divides both ${a} and ${b} exactly is <b>${correct}</b>.` };
+    }
+    const correct = lcmOf(a, b);
+    return { q: `What is the LCM of ${a} and ${b}?`, options: buildNumericOptions(correct, () => correct + pick([-a, a, -b, b, 4])), answer: fmt(correct), explain: `The smallest number both ${a} and ${b} divide into exactly is <b>${fmt(correct)}</b>.` };
+  },
+  // ---- Unit 4: Fractions ----
+  u4: function () {
+    const d = pick([4, 5, 6, 8, 10]);
+    let n1 = rint(1, d - 2), n2 = rint(1, d - n1 - 1 >= 1 ? d - n1 - 1 : 1);
+    if (n1 + n2 >= d) n2 = Math.max(1, d - n1 - 1);
+    const correctNum = n1 + n2;
+    const answer = `${correctNum}/${d}`;
+    const distractors = [`${correctNum + 1}/${d}`, `${correctNum - 1 > 0 ? correctNum - 1 : correctNum + 2}/${d}`, `${n1}/${n2 === 0 ? d : n2}`, `${correctNum}/${d + 1}`];
+    const opts = Array.from(new Set([answer, ...distractors])).slice(0, 4);
+    while (opts.length < 4) opts.push(`${correctNum}/${d + opts.length}`);
+    for (let i = opts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[opts[i], opts[j]] = [opts[j], opts[i]]; }
+    return { q: `${n1}/${d} + ${n2}/${d} = ?`, options: opts, answer, explain: `Same denominator, so just add the tops: ${n1}+${n2}=${correctNum} → <b>${answer}</b>.` };
+  },
+  // ---- Unit 5: Decimals ----
+  u5: function () {
+    const a = (rint(100, 9999) / 100).toFixed(2);
+    const b = (rint(100, 9999) / 100).toFixed(2);
+    const isAdd = Math.random() < 0.5;
+    const correct = isAdd ? (Number(a) + Number(b)).toFixed(2) : (Math.max(a, b) - Math.min(a, b)).toFixed(2);
+    const hi = Math.max(Number(a), Number(b)).toFixed(2), lo = Math.min(Number(a), Number(b)).toFixed(2);
+    const q = isAdd ? `A shopkeeper sold goods worth ₹${a} in the morning and ₹${b} in the afternoon. What was the total?` : `A jug had ₹${hi} worth of coins. ₹${lo} worth were spent. How much is left?`;
+    const opts = [correct, (Number(correct) + 1).toFixed(2), (Number(correct) - 1).toFixed(2), (Number(correct) + 0.1).toFixed(2)];
+    const optsFmt = Array.from(new Set(opts)).map(o => "₹" + o);
+    while (optsFmt.length < 4) optsFmt.push("₹" + (Number(correct) + optsFmt.length).toFixed(2));
+    for (let i = optsFmt.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[optsFmt[i], optsFmt[j]] = [optsFmt[j], optsFmt[i]]; }
+    return { q, options: optsFmt.slice(0, 4), answer: "₹" + correct, explain: isAdd ? `₹${a} + ₹${b} = <b>₹${correct}</b>.` : `₹${hi} − ₹${lo} = <b>₹${correct}</b>.` };
+  },
+  // ---- Unit 6: Geometry (angle classification) ----
+  u6: function () {
+    const angle = rint(1, 179);
+    let correct;
+    if (angle === 90) correct = "Right";
+    else if (angle < 90) correct = "Acute";
+    else correct = "Obtuse";
+    const options = Array.from(new Set(["Acute", "Right", "Obtuse"]));
+    while (options.length < 4) options.push("Reflex");
+    for (let i = options.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[options[i], options[j]] = [options[j], options[i]]; }
+    return { q: `An angle measures ${angle}°. What type of angle is it?`, options, answer: correct, explain: angle === 90 ? `Exactly 90° is a <b>Right</b> angle.` : angle < 90 ? `Less than 90° is an <b>Acute</b> angle.` : `Between 90° and 180° is an <b>Obtuse</b> angle.` };
+  },
+  // ---- Unit 7: Area & Volume ----
+  u7: function () {
+    const isVolume = Math.random() < 0.5;
+    if (isVolume) {
+      const l = rint(2, 12), b = rint(2, 12), h = rint(2, 12);
+      const correct = l * b * h;
+      const opts = buildNumericOptions(correct, () => correct + pick([-l, l, -b, b, -h, h])).map(o => o + " cu cm");
+      return { q: `A cuboid box has length ${l} cm, breadth ${b} cm, and height ${h} cm. What is its volume?`, options: opts, answer: fmt(correct) + " cu cm", explain: `Volume = l × b × h = ${l} × ${b} × ${h} = <b>${fmt(correct)} cu cm</b>.` };
+    }
+    const l = rint(3, 40), b = rint(3, 40);
+    const correct = l * b;
+    const opts = buildNumericOptions(correct, () => correct + pick([-l, l, -b, b, 2])).map(o => o + " sq m");
+    return { q: `A rectangular garden is ${l} m long and ${b} m broad. What is its area?`, options: opts, answer: fmt(correct) + " sq m", explain: `Area = length × breadth = ${l} × ${b} = <b>${fmt(correct)} sq m</b>.` };
+  },
+  // ---- Unit 8: Percentages ----
+  u8: function () {
+    const pct = pick([5, 10, 20, 25, 50, 75]);
+    const base = pick([4, 5, 10, 20, 25, 40, 50, 80, 100]) * rint(1, 4);
+    const correct = (pct / 100) * base;
+    return { q: `What is ${pct}% of ${base}?`, options: buildNumericOptions(correct, () => correct + pick([-5, 5, -2, 2, base * 0.1])), answer: fmt(correct), explain: `${pct}% of ${base} = ${pct}/100 × ${base} = <b>${fmt(correct)}</b>.` };
+  },
+  // ---- Unit 9: Money (profit/loss) ----
+  u9: function () {
+    const cp = rint(50, 900);
+    const isProfit = Math.random() < 0.5;
+    const diff = rint(5, Math.max(6, Math.floor(cp * 0.3)));
+    const sp = isProfit ? cp + diff : cp - diff;
+    const correct = diff;
+    return {
+      q: `A shopkeeper bought an item for ₹${cp} and sold it for ₹${sp}. What is the ${isProfit ? "profit" : "loss"}?`,
+      options: buildNumericOptions(correct, () => correct + pick([-5, 5, -10, 10, 3])).map(o => "₹" + o),
+      answer: "₹" + fmt(correct),
+      explain: isProfit ? `SP (₹${sp}) is more than CP (₹${cp}). Profit = ${sp} − ${cp} = <b>₹${correct}</b>.` : `CP (₹${cp}) is more than SP (₹${sp}). Loss = ${cp} − ${sp} = <b>₹${correct}</b>.`
+    };
+  },
+  // ---- Unit 10: Time ----
+  u10: function () {
+    const h1 = rint(1, 8), m1 = rint(1, 59), h2 = rint(1, 8), m2 = rint(1, 59);
+    let totalMin = m1 + m2, carryH = Math.floor(totalMin / 60);
+    totalMin = totalMin % 60;
+    const totalH = h1 + h2 + carryH;
+    const correct = `${totalH} h ${totalMin} min`;
+    const opts = [correct, `${totalH - 1} h ${totalMin} min`, `${totalH} h ${totalMin === 0 ? 1 : totalMin - 1} min`, `${totalH + 1} h ${totalMin} min`];
+    const uniqueOpts = Array.from(new Set(opts));
+    while (uniqueOpts.length < 4) uniqueOpts.push(`${totalH} h ${(totalMin + uniqueOpts.length) % 60} min`);
+    for (let i = uniqueOpts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[uniqueOpts[i], uniqueOpts[j]] = [uniqueOpts[j], uniqueOpts[i]]; }
+    return { q: `Add ${h1} h ${m1} min and ${h2} h ${m2} min.`, options: uniqueOpts.slice(0, 4), answer: correct, explain: `Minutes: ${m1}+${m2}=${m1 + m2} → ${carryH ? "1 h " : ""}${totalMin} min. Hours: ${h1}+${h2}${carryH ? "+1" : ""}=${totalH} h. Total = <b>${correct}</b>.` };
+  },
+  // ---- Unit 12: Maps (scale) ----
+  u12: function () {
+    const scale = pick([10, 20, 25, 50, 100, 200]);
+    const cm = rint(2, 9);
+    const correct = scale * cm;
+    return { q: `A map's scale is 1 cm = ${scale} km. What is the real distance for ${cm} cm on the map?`, options: buildNumericOptions(correct, () => correct + pick([-scale, scale, -10, 10])).map(o => o + " km"), answer: fmt(correct) + " km", explain: `${cm} × ${scale} km = <b>${fmt(correct)} km</b>.` };
+  },
+  // ---- Unit 13: Algebra ----
+  u13: function () {
+    const a = rint(1, 10), b = rint(1, 10);
+    const coefA = pick([1, 2, 3]), coefB = pick([1, 2, 3]);
+    const correct = coefA * a + coefB * b;
+    const exprStr = `${coefA > 1 ? coefA : ""}a + ${coefB > 1 ? coefB : ""}b`;
+    return { q: `If a=${a} and b=${b}, find the value of ${exprStr}.`, options: buildNumericOptions(correct, () => correct + pick([-a, a, -b, b, 2])), answer: fmt(correct), explain: `${exprStr} = ${coefA}×${a} + ${coefB}×${b} = ${coefA * a} + ${coefB * b} = <b>${fmt(correct)}</b>.` }
+  }
+};
+
+if (typeof window !== "undefined") window.GENERATORS = GENERATORS;
+
+</script>
+<script>
+/* ==========================================================================
+   JUNGLE MATH QUEST — app logic (v2: progress dashboard + random practice)
+   ========================================================================== */
+
+const STORAGE_KEY = "jungleMathQuestProgress_v2";
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { xp: 0, lessons: {}, streak: { last: null, count: 0 }, practice: {} };
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+}
+
+function bumpStreak() {
+  const t = todayStr();
+  const s = state.progress.streak;
+  if (s.last === t) return;
+  const yest = new Date();
+  yest.setDate(yest.getDate() - 1);
+  const yStr = `${yest.getFullYear()}-${yest.getMonth() + 1}-${yest.getDate()}`;
+  s.count = s.last === yStr ? s.count + 1 : 1;
+  s.last = t;
+  saveProgress();
+}
+
+const state = {
+  progress: loadProgress(),
+  view: "home",       // home | unit | learn | practice | summary | progress | random
+  currentUnit: null,
+  currentLesson: null,
+  qIndex: 0,
+  qResults: [],
+  answered: false,
+  randomQ: null,
+  randomSession: { attempts: 0, correct: 0 },
+};
+
+const root = document.getElementById("app");
+
+/* ---------------- helpers ---------------- */
+function lessonProgress(lessonId) {
+  return state.progress.lessons[lessonId] || { stars: 0, best: 0, attempts: 0 };
+}
+
+function practiceStats(unitId) {
+  return state.progress.practice[unitId] || { attempts: 0, correct: 0 };
+}
+
+function unitStats(unit) {
+  let done = 0, mastered = 0, stars = 0;
+  unit.lessons.forEach(l => {
+    const p = lessonProgress(l.id);
+    if (p.stars > 0) done++;
+    if (p.stars === 3) mastered++;
+    stars += p.stars;
+  });
+  return { done, mastered, total: unit.lessons.length, stars, maxStars: unit.lessons.length * 3 };
+}
+
+function unitStatusLabel(unit) {
+  const s = unitStats(unit);
+  if (s.done === 0) return { text: "Not started", cls: "status-new" };
+  if (s.mastered === s.total) return { text: "Mastered!", cls: "status-mastered" };
+  if (s.done === s.total) return { text: "Completed", cls: "status-done" };
+  return { text: "In progress", cls: "status-progress" };
+}
+
+function overallStats() {
+  let totalLessons = 0, doneLessons = 0, masteredLessons = 0, totalStars = 0, maxStars = 0;
+  let chaptersMastered = 0, chaptersCompleted = 0;
+  UNITS.forEach(u => {
+    const s = unitStats(u);
+    totalLessons += s.total;
+    doneLessons += s.done;
+    masteredLessons += s.mastered;
+    totalStars += s.stars;
+    maxStars += s.maxStars;
+    if (s.mastered === s.total) chaptersMastered++;
+    else if (s.done === s.total) chaptersCompleted++;
+  });
+  let practiceAttempts = 0, practiceCorrect = 0;
+  Object.values(state.progress.practice || {}).forEach(p => { practiceAttempts += p.attempts; practiceCorrect += p.correct; });
+  return { totalLessons, doneLessons, masteredLessons, totalStars, maxStars, chaptersMastered, chaptersCompleted, totalChapters: UNITS.length, practiceAttempts, practiceCorrect };
+}
+
+function starsHtml(n, max = 3) {
+  let h = "";
+  for (let i = 1; i <= max; i++) h += `<span class="star ${i <= n ? "on" : ""}">★</span>`;
+  return h;
+}
+
+const MASCOT_LINES = [
+  "Ready for a maths adventure? 🌿",
+  "Every explorer started somewhere — let's go!",
+  "You've got this, champion! 💪",
+  "Oops-proof tip: mistakes help your brain grow stronger!",
+  "Pick a camp on the map to begin!",
+  "Even when you get it right, read the 'why' — that's the exam-ready trick!",
+];
+
+function pickMascotLine() {
+  const stats = overallStats();
+  if (stats.doneLessons === 0) return "Hi! I'm Bucky 🐿️ — tap a camp on the map to start your first quest!";
+  if (stats.chaptersMastered === stats.totalChapters) return "WOW — you've mastered the WHOLE jungle! You're a true Maths Champion! 🏆";
+  return MASCOT_LINES[stats.doneLessons % MASCOT_LINES.length];
+}
+
+/* ---------------- rendering ---------------- */
+function render() {
+  if (state.view === "home") return renderHome();
+  if (state.view === "unit") return renderUnit();
+  if (state.view === "learn") return renderLearn();
+  if (state.view === "practice") return renderPractice();
+  if (state.view === "summary") return renderSummary();
+  if (state.view === "progress") return renderProgress();
+  if (state.view === "random") return renderRandomPractice();
+}
+
+function topNav() {
+  return `
+    <div class="stat-pills">
+      <div class="pill xp">✨ ${state.progress.xp} XP</div>
+      <div class="pill streak">🔥 ${state.progress.streak.count}d</div>
+      <div class="pill navbtn" id="navProgress">📊 Progress</div>
+      <div class="pill reset" id="resetBtn" title="Reset all progress">↺</div>
+    </div>
+  `;
+}
+
+function wireTopNav() {
+  const p = document.getElementById("navProgress");
+  if (p) p.addEventListener("click", () => { state.view = "progress"; render(); });
+  const r = document.getElementById("resetBtn");
+  if (r) r.addEventListener("click", doReset);
+}
+
+function renderHome() {
+  const stats = overallStats();
+  const pct = stats.totalLessons ? Math.round((stats.doneLessons / stats.totalLessons) * 100) : 0;
+
+  root.innerHTML = `
+    <div class="topbar">
+      <div class="brand">🌴 <span>Jungle Math Quest</span></div>
+      ${topNav()}
+    </div>
+
+    <div class="mascot-banner">
+      <div class="mascot-emoji">🐿️</div>
+      <div class="speech">${pickMascotLine()}</div>
+    </div>
+
+    <div class="overall-bar-wrap">
+      <div class="overall-bar-label">Jungle explored: ${stats.doneLessons}/${stats.totalLessons} camps &nbsp;•&nbsp; ${pct}% &nbsp;•&nbsp; ${stats.chaptersMastered}/${stats.totalChapters} chapters mastered 🏆</div>
+      <div class="overall-bar"><div class="overall-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="map" id="map">
+      ${UNITS.map((u, i) => renderMapNode(u, i)).join("")}
+    </div>
+  `;
+
+  UNITS.forEach(u => {
+    document.getElementById("node-" + u.id).addEventListener("click", () => {
+      state.currentUnit = u;
+      state.view = "unit";
+      render();
+    });
+  });
+  wireTopNav();
+}
+
+function renderMapNode(unit, i) {
+  const s = unitStats(unit);
+  const pct = s.total ? Math.round((s.done / s.total) * 100) : 0;
+  const side = i % 2 === 0 ? "left" : "right";
+  const status = unitStatusLabel(unit);
+  return `
+    <div class="map-node ${side}" id="node-${unit.id}" style="--accent:${unit.color}">
+      <div class="node-ring" style="--pct:${pct}">
+        <div class="node-emoji">${unit.emoji}</div>
+      </div>
+      <div class="node-info">
+        <div class="node-title-row">
+          <div class="node-title">${unit.name}</div>
+          <span class="chip ${status.cls}">${status.text}</span>
+        </div>
+        <div class="node-tag">${unit.tagline}</div>
+        <div class="node-progress">${s.done}/${s.total} lessons &nbsp; ${starsHtml(s.stars > s.maxStars ? s.maxStars : s.stars, s.maxStars)}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderUnit() {
+  const u = state.currentUnit;
+  const ps = practiceStats(u.id);
+  const hasGenerator = typeof GENERATORS !== "undefined" && GENERATORS[u.id];
+  root.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" id="backHome">← Map</button>
+      <div class="brand small" style="--accent:${u.color}">${u.emoji} ${u.name}</div>
+      <div></div>
+    </div>
+    <p class="unit-tagline">${u.tagline}</p>
+    <div class="lesson-grid">
+      ${u.lessons.map(l => renderLessonCard(l, u)).join("")}
+    </div>
+    ${hasGenerator ? `
+      <div class="random-cta" style="--accent:${u.color}">
+        <div class="random-cta-text">
+          <b>🎲 Keep Practising!</b>
+          <span>Fresh, never-ending questions for ${u.name} — great for locking it into long-term memory.</span>
+          ${ps.attempts > 0 ? `<span class="random-cta-stats">So far: ${ps.correct}/${ps.attempts} correct</span>` : ""}
+        </div>
+        <button class="cta-btn small" id="startRandom">Practice Mix →</button>
+      </div>` : ""}
+  `;
+  document.getElementById("backHome").addEventListener("click", () => { state.view = "home"; render(); });
+  u.lessons.forEach(l => {
+    document.getElementById("card-" + l.id).addEventListener("click", () => {
+      state.currentLesson = l;
+      state.view = "learn";
+      render();
+    });
+  });
+  const rb = document.getElementById("startRandom");
+  if (rb) rb.addEventListener("click", () => {
+    state.randomSession = { attempts: 0, correct: 0 };
+    state.randomQ = GENERATORS[u.id]();
+    state.view = "random";
+    render();
+  });
+}
+
+function renderLessonCard(lesson, unit) {
+  const p = lessonProgress(lesson.id);
+  return `
+    <div class="lesson-card" id="card-${lesson.id}" style="--accent:${unit.color}">
+      <div class="lesson-emoji">${lesson.emoji}</div>
+      <div class="lesson-title">${lesson.title}</div>
+      <div class="lesson-stars">${starsHtml(p.stars)}</div>
+      <div class="lesson-cta">${p.stars > 0 ? "Practice again →" : "Start →"}</div>
+    </div>
+  `;
+}
+
+function renderLearn() {
+  const l = state.currentLesson;
+  const u = state.currentUnit;
+  const ex = l.learn.example;
+  root.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" id="backUnit">← ${u.name}</button>
+      <div class="brand small" style="--accent:${u.color}">${l.emoji} ${l.title}</div>
+      <div></div>
+    </div>
+    <div class="learn-card" style="--accent:${u.color}">
+      <div class="learn-intro">${l.learn.intro}</div>
+      <ul class="learn-points">
+        ${l.learn.points.map(p => `<li>${p}</li>`).join("")}
+      </ul>
+      ${ex ? `
+        <div class="example-box">
+          <div class="example-title">📘 ${ex.title}</div>
+          <table class="example-table">
+            ${ex.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}
+          </table>
+        </div>` : ""}
+    </div>
+    <button class="cta-btn" id="startPractice" style="--accent:${u.color}">Let's Practice! 🚀</button>
+  `;
+  document.getElementById("backUnit").addEventListener("click", () => { state.view = "unit"; render(); });
+  document.getElementById("startPractice").addEventListener("click", () => {
+    state.qIndex = 0;
+    state.qResults = [];
+    state.view = "practice";
+    render();
+  });
+}
+
+function renderPractice() {
+  const l = state.currentLesson;
+  const u = state.currentUnit;
+  const q = l.questions[state.qIndex];
+  state.answered = false;
+
+  root.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" id="backUnit">✕</button>
+      <div class="progress-dots">
+        ${l.questions.map((_, i) => `<span class="dot ${i < state.qIndex ? "done" : ""} ${i === state.qIndex ? "active" : ""}"></span>`).join("")}
+      </div>
+      <div></div>
+    </div>
+    <div class="question-card ${q.q.startsWith("🧠") ? "brain" : ""}" style="--accent:${u.color}">
+      <div class="q-count">Question ${state.qIndex + 1} of ${l.questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="options">
+        ${q.options.map((opt, i) => `<button class="option-btn" data-i="${i}">${opt}</button>`).join("")}
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  `;
+
+  document.getElementById("backUnit").addEventListener("click", () => { state.view = "unit"; render(); });
+
+  document.querySelectorAll(".option-btn").forEach(btn => {
+    btn.addEventListener("click", () => onAnswer(btn, q));
+  });
+}
+
+function onAnswer(btn, q) {
+  if (state.answered) return;
+  state.answered = true;
+  const chosen = btn.textContent;
+  const correct = chosen === q.answer;
+  state.qResults.push(correct);
+
+  document.querySelectorAll(".option-btn").forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.answer) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong");
+  });
+
+  const fb = document.getElementById("feedback");
+  if (correct) {
+    state.progress.xp += q.q.startsWith("🧠") ? 15 : 10;
+    saveProgress();
+    fb.innerHTML = `
+      <div class="fb-box fb-correct">
+        <div class="fb-head">🎉 Correct! Here's the method (always good to check!):</div>
+        <div class="fb-body">${q.explain}</div>
+      </div>
+      <button class="cta-btn small" id="nextBtn">Next →</button>
+    `;
+    burstConfetti();
+  } else {
+    fb.innerHTML = `
+      <div class="fb-box fb-wrong">
+        <div class="fb-head">🌱 Not quite — here's how to solve it:</div>
+        <div class="fb-body"><b>Correct answer: ${q.answer}</b><br>${q.explain}</div>
+      </div>
+      <button class="cta-btn small" id="nextBtn">Got it, Next →</button>
+    `;
+  }
+  document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+}
+
+function nextQuestion() {
+  const l = state.currentLesson;
+  if (state.qIndex < l.questions.length - 1) {
+    state.qIndex++;
+    render();
+  } else {
+    finishLesson();
+  }
+}
+
+function finishLesson() {
+  const l = state.currentLesson;
+  const correctCount = state.qResults.filter(Boolean).length;
+  const pct = Math.round((correctCount / l.questions.length) * 100);
+  let stars = 0;
+  if (pct === 100) stars = 3;
+  else if (pct >= 80) stars = 2;
+  else if (pct >= 50) stars = 1;
+
+  const prev = lessonProgress(l.id);
+  const newStars = Math.max(prev.stars, stars);
+  const isFirstClear = prev.stars === 0 && stars > 0;
+  state.progress.lessons[l.id] = {
+    stars: newStars,
+    best: Math.max(prev.best || 0, pct),
+    attempts: (prev.attempts || 0) + 1,
+  };
+  if (isFirstClear) state.progress.xp += 25;
+  bumpStreak();
+  saveProgress();
+
+  state.lastResult = { correctCount, total: l.questions.length, pct, stars, isFirstClear };
+  state.view = "summary";
+  render();
+  if (stars >= 2) burstConfetti(true);
+}
+
+function renderSummary() {
+  const u = state.currentUnit;
+  const l = state.currentLesson;
+  const r = state.lastResult;
+  const messages = [
+    { min: 100, text: "PERFECT SCORE! You're a jungle legend! 🏆" },
+    { min: 80, text: "Amazing work! So close to perfect! 🌟" },
+    { min: 50, text: "Nice progress! A little more practice and you'll master it. 🌿" },
+    { min: 0, text: "Good try! Let's learn it again and give it another shot. 🐾" },
+  ];
+  const msg = messages.find(m => r.pct >= m.min).text;
+
+  root.innerHTML = `
+    <div class="summary-card" style="--accent:${u.color}">
+      <div class="summary-emoji">${r.stars === 3 ? "🏆" : r.stars === 2 ? "🌟" : r.stars === 1 ? "🌿" : "🐾"}</div>
+      <div class="summary-title">${msg}</div>
+      <div class="summary-stars">${starsHtml(r.stars)}</div>
+      <div class="summary-score">${r.correctCount} / ${r.total} correct &nbsp;(${r.pct}%)</div>
+      ${r.isFirstClear ? `<div class="summary-xp">+25 XP bonus for finishing this quest for the first time!</div>` : ""}
+      <div class="summary-actions">
+        <button class="cta-btn ghost" id="retryBtn">Try Again</button>
+        <button class="cta-btn" id="continueBtn" style="--accent:${u.color}">Back to ${u.name} →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("retryBtn").addEventListener("click", () => {
+    state.qIndex = 0;
+    state.qResults = [];
+    state.view = "practice";
+    render();
+  });
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    state.view = "unit";
+    render();
+  });
+}
+
+/* ---------------- Progress dashboard ---------------- */
+function renderProgress() {
+  const stats = overallStats();
+  root.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" id="backHome2">← Map</button>
+      <div class="brand small">📊 My Progress</div>
+      <div></div>
+    </div>
+
+    <div class="progress-summary-grid">
+      <div class="psum-card"><div class="psum-num">${stats.chaptersMastered}/${stats.totalChapters}</div><div class="psum-label">Chapters Mastered 🏆</div></div>
+      <div class="psum-card"><div class="psum-num">${stats.doneLessons}/${stats.totalLessons}</div><div class="psum-label">Lessons Completed</div></div>
+      <div class="psum-card"><div class="psum-num">${state.progress.xp}</div><div class="psum-label">Total XP ✨</div></div>
+      <div class="psum-card"><div class="psum-num">${stats.practiceAttempts}</div><div class="psum-label">Bonus Practice Reps 🎲</div></div>
+    </div>
+
+    <div class="chapter-list">
+      ${UNITS.map(u => renderChapterRow(u)).join("")}
+    </div>
+  `;
+  document.getElementById("backHome2").addEventListener("click", () => { state.view = "home"; render(); });
+  UNITS.forEach(u => {
+    const row = document.getElementById("chrow-" + u.id);
+    if (row) row.addEventListener("click", () => { state.currentUnit = u; state.view = "unit"; render(); });
+  });
+}
+
+function renderChapterRow(unit) {
+  const s = unitStats(unit);
+  const status = unitStatusLabel(unit);
+  const pct = s.total ? Math.round((s.done / s.total) * 100) : 0;
+  const ps = practiceStats(unit.id);
+  return `
+    <div class="chapter-row" id="chrow-${unit.id}" style="--accent:${unit.color}">
+      <div class="chrow-emoji">${unit.emoji}</div>
+      <div class="chrow-main">
+        <div class="chrow-title-line">
+          <span class="chrow-title">${unit.name}</span>
+          <span class="chip ${status.cls}">${status.text}</span>
+        </div>
+        <div class="chrow-bar"><div class="chrow-bar-fill" style="width:${pct}%"></div></div>
+        <div class="chrow-meta">${s.done}/${s.total} lessons &nbsp;•&nbsp; ${starsHtml(s.stars, s.maxStars)} ${ps.attempts > 0 ? `&nbsp;•&nbsp; ${ps.correct}/${ps.attempts} practice reps` : ""}</div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------- Random / infinite practice ---------------- */
+function renderRandomPractice() {
+  const u = state.currentUnit;
+  const q = state.randomQ;
+  state.answered = false;
+  const sess = state.randomSession;
+
+  root.innerHTML = `
+    <div class="topbar">
+      <button class="back-btn" id="endRandom">✕ End</button>
+      <div class="brand small" style="--accent:${u.color}">🎲 ${u.name} — Practice Mix</div>
+      <div class="pill xp">${sess.correct}/${sess.attempts}</div>
+    </div>
+    <div class="question-card random-q" style="--accent:${u.color}">
+      <div class="q-count">Fresh question — practice makes it stick! 🧠</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="options">
+        ${q.options.map((opt, i) => `<button class="option-btn" data-i="${i}">${opt}</button>`).join("")}
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  `;
+  document.getElementById("endRandom").addEventListener("click", endRandomSession);
+  document.querySelectorAll(".option-btn").forEach(btn => {
+    btn.addEventListener("click", () => onRandomAnswer(btn, q));
+  });
+}
+
+function onRandomAnswer(btn, q) {
+  if (state.answered) return;
+  state.answered = true;
+  const chosen = btn.textContent;
+  const correct = chosen === q.answer;
+  state.randomSession.attempts++;
+  if (correct) state.randomSession.correct++;
+
+  const u = state.currentUnit;
+  const ps = practiceStats(u.id);
+  ps.attempts++;
+  if (correct) ps.correct++;
+  state.progress.practice[u.id] = ps;
+  if (correct) state.progress.xp += 5;
+  saveProgress();
+
+  document.querySelectorAll(".option-btn").forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.answer) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong");
+  });
+
+  const fb = document.getElementById("feedback");
+  if (correct) {
+    fb.innerHTML = `
+      <div class="fb-box fb-correct">
+        <div class="fb-head">🎉 Correct! Here's the method:</div>
+        <div class="fb-body">${q.explain}</div>
+      </div>
+      <button class="cta-btn small" id="nextRandomBtn">Next Question →</button>
+    `;
+    burstConfetti();
+  } else {
+    fb.innerHTML = `
+      <div class="fb-box fb-wrong">
+        <div class="fb-head">🌱 Not quite — here's how to solve it:</div>
+        <div class="fb-body"><b>Correct answer: ${q.answer}</b><br>${q.explain}</div>
+      </div>
+      <button class="cta-btn small" id="nextRandomBtn">Next Question →</button>
+    `;
+  }
+  document.getElementById("nextRandomBtn").addEventListener("click", () => {
+    state.randomQ = GENERATORS[u.id]();
+    render();
+  });
+}
+
+function endRandomSession() {
+  state.view = "unit";
+  render();
+}
+
+function doReset() {
+  if (!confirm("This will erase all progress and XP. Are you sure?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state.progress = loadProgress();
+  render();
+}
+
+/* ---------------- confetti (lightweight, no deps) ---------------- */
+function burstConfetti(big) {
+  const colors = ["#3FA34D", "#4FB0E8", "#FF7A5C", "#FFB238", "#FFE66D", "#7A5CFF"];
+  const count = big ? 60 : 24;
+  const layer = document.getElementById("confetti-layer");
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left = (45 + Math.random() * 10) + "vw";
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.setProperty("--dx", (Math.random() * 2 - 1).toFixed(2));
+    el.style.setProperty("--rot", (Math.random() * 360).toFixed(0) + "deg");
+    el.style.animationDuration = (0.9 + Math.random() * 0.8) + "s";
+    el.style.animationDelay = (Math.random() * 0.15) + "s";
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+}
+
+/* ---------------- boot ---------------- */
+if (typeof window !== "undefined") window.state = state;
+render();
+
+</script>
+</body>
+</html>
